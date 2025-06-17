@@ -17,9 +17,9 @@ biopacGain = 200;                 % a prompt will be given to check that it's se
 scannerTriggerKey = KbName('t');  % waits for this trigger from the scanner before starting the main task   
 
 % folder setup
-dataFolderName = 'Data';          % data collected from the experiment will be stored in this folder
-biopacFolderName = 'Files';       % the folder containing the mpdev (biopac) files, .dll, mex files - anything that's not a matlab script
-imgsFolderName = 'Images';        % the folder containing images etc used in the experiment
+dataFolderName = 'data';          % data collected from the experiment will be stored in this folder
+biopacFolderName = 'files';       % the folder containing the mpdev (biopac) files, .dll, mex files - anything that's not a matlab script
+imgsFolderName = 'assets';        % the folder containing images etc used in the experiment
 
 %% Setup
 
