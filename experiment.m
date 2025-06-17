@@ -38,9 +38,9 @@ end
 
 % check that the folders actually exist - we could just make them here if they don't exist already, but 
 % more likely the user has mistyped the name so perhaps throwing an error is more appropriate
-if ~exist(dataFolderName, 'dir'), error("The '%s' folder you specified doesn't exist!", dataFolderName); end
-if ~exist(biopacFolderName, 'dir'), error("The '%s' folder you specified doesn't exist!", biopacFolderName); end
-if ~exist(imgsFolderName, 'dir'), error("The '%s' folder you specified doesn't exist!", imgsFolderName); end
+if ~exist(dataFolderName, 'dir'), disp("!! The '%s' folder you specified doesn't exist!", dataFolderName); end
+if ~exist(biopacFolderName, 'dir'), disp("!! The '%s' folder you specified doesn't exist!", biopacFolderName); end
+if ~exist(imgsFolderName, 'dir'), disp("!! The '%s' folder you specified doesn't exist!", imgsFolderName); end
 
 % set path to experiment folder
 % Added by Selma to avoid conflicting paths/functions
