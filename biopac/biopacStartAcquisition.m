@@ -1,4 +1,4 @@
-function startTime = biopacStartAcquisition(ex)
+function startTime = biopacStartAcquisition()
 
     % attempt to setup for acquisition start
     msg = calllib('mpdev', 'startMPAcqDaemon');
@@ -11,7 +11,7 @@ function startTime = biopacStartAcquisition(ex)
     msg = calllib('mpdev', 'startAcquisition');
     if ~strcmp(msg, 'MPSUCCESS')
         sca; 
-        calllib(ex.biopac.mplib, 'disconnectMPDev');
+        calllib('mpdev', 'disconnectMPDev');
         error('Failed to start dynamometer acquisition: %s', msg);
     end
     

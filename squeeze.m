@@ -8,7 +8,7 @@ function forceData = squeeze(ex, screen, barColour, outlineColour, targetLineCol
     assert(squeezeBarHeightDivisor~=0, "The squeezeBarHeightDivisor cannot be 0. Perhaps you meant to set it to 1?");
     
     % Tell the biopac we want to start acquiring data now
-    acquisitionStartTime = biopacStartAcquisition(ex);
+    acquisitionStartTime = biopacStartAcquisition();
 
     % Run the squeeze
     fbfunc = @(f) drawSqueeze(ex, screen, barColour, outlineColour, targetLineColour, f()/squeezeBarHeightDivisor, targetLineHeight, cueText); 

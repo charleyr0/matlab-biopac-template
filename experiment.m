@@ -6,10 +6,9 @@ clearvars;
 
 %% Folder setup
 dataFolderName = 'data';          % data collected from the experiment will be stored in this folder
-biopacFolderName = 'biopac';      % the folder containing the mpdevmex files and the biopac matlab scripts
 imgsFolderName = 'assets';        % the folder containing images etc used in the experiment
 
-% add subfolders to path
+% add subfolders (containing matlab scripts) to path
 addpath(fullfile(pwd, 'biopac'));
 
 % force to run from the experiment's own directory to avoid potential errors
@@ -25,15 +24,14 @@ end
 % experiment variables
 data.id = 101;                
 data.session = 1; 
-data.code = string(data.id) + '-' + string(datetime('now', 'Format', 'ddMMyy'));      % e.g. would be 101-010225 , if pptID = 101 on 01/02/25
-data.filename = [num2str(data.code), '_', num2str(data.session), '_', '_data.mat'];      % e.g. would be 101-010225_1_data.mat , if session = 1 with the above
+data.code = string(data.id) + '-' + string(datetime('now', 'Format', 'ddMMyy'));         % e.g. would be 101-010225 , if pptID = 101 on 01/02/25
+data.filename = [num2str(data.code), '-', num2str(data.session), '-data.mat'];      % e.g. would be 101-010225-1-data.mat , if session = 1 with the above
 
 debug = 0;                        % if debug = 1, will run a minimal version of the experiment
 biopacGain = 200;                 % a prompt will be given to check that it's set to this gain
 scannerTriggerKey = KbName('t');  % waits for this trigger from the scanner before starting the main task   
 
 %% Setup - ex
-ex.biopac.mplib = 'mpdev';
 ex.biopac.sample_rate = 500; 
 ex.biopac.barColourCalibration = [0 0 255];    % set colour of force-meter (blue) titration and initial squeezes
 ex.biopac.ForceColour_ef = [255 0 0];          % set colour of force-meter (red) effort decisions
@@ -61,7 +59,7 @@ ex.display.textSize = 35;
 ex.display.textFont = 'Arial';
 
 % variables used for the squeeze calibration
-ex.calib.initialSqueezeBarHeightDivisor = 4;  % scales the bar down - depends on your gain - 4 is good for 200 gain; lower for 50 gain; you probably shouldn't use 1000 or 5000
+ex.calib.initialSqueezeBarHeightDivisor = 2;  % scales the bar down - depends on your gain - 4 is good for 200 gain; 2 for 50 gain; do not use 1000 or 5000 gain with the dynamometer (too high)
 ex.calib.goals = [0, 1.1, 1.05];              % the heights of the yellow bar (as a multiplier of their initial attempt's max value) on their 3 attempts. 1st one should be 0 (which will draw no bar)
 ex.calib.textTime = 2;                        % how long (secs) to display each instruction text for
 ex.calib.text = {                             % the prompts to show throughout the calibration procedure
@@ -80,7 +78,7 @@ ex.escapeKey = KbName('ESCAPE');
 ex.timingKey = KbName('t');
 ex.acceptedKeys = KbName('space');
 ex.progressKey = KbName('space'); % to continue after instructions
-% add something with datapixx2 for MRI
+% TODO add something with datapixx2 for MRI (??)
 
 % setup psychtoolbox
 PsychDefaultSetup(2); 
@@ -96,11 +94,11 @@ if debug
     input('> Running in debug mode - PRESS ENTER to continue...');
 end
 
-input(sprintf('> Press enter to confirm: \nID = %s  Code = %s  Session = %s\n', data.id, data.code, data.session));
+input(sprintf('> Press enter to confirm: \nID = %d  Code = %s  Session = %d\n', data.id, data.code, data.session));
 
 % initialise dynamometer
 disp("Resetting the biopac connection...");
-restingSqueezeValue = biopacResetConnection(biopacFolderName, ex);
+restingSqueezeValue = biopacResetConnection(ex);
 fprintf('Resting squeeze value just measured from the handle = %0.3f\n', restingSqueezeValue);
 input(sprintf('> Set biopac gain to %d then press ENTER to continue...', biopacGain));
 
@@ -119,11 +117,10 @@ if ~debug
 end
 
 % run main task
-if 
 
 %% End of script
 
-% save data TODO
+% save data
 
 % unload the dynamometer library
 unloadlibrary('mpdev'); 

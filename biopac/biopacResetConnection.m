@@ -1,14 +1,17 @@
-function restingSqueezeValue = biopacResetConnection(dir, ex)
+function restingSqueezeValue = biopacResetConnection(ex)
 
     % generally there is no need to unload the library, but if you
     % want to, just enter this in the command window:
     % unloadlibrary('mpdev');
 
+    % the xerces-c_3_1.dll is required to also be in the biopac folder,
+    % otherwise matlab can't find the mpdev.dll for some reason.
+
     % load the .dll and C file that contain the commands for communicating
     % with the biopac. These will be used here and in later communications
     % with the biopac.
     if ~libisloaded('mpdev')
-        loadlibrary([dir '/mpdev.dll'],[dir '/mpdev.h']);
+        loadlibrary('mpdev.dll','mpdev.h');
     end
 
     % disconnect then reconnect
@@ -25,7 +28,7 @@ function restingSqueezeValue = biopacResetConnection(dir, ex)
     calllib('mpdev', 'setAcqChannels', int32([1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ]));  % which of 16 channels?
 
     % poll 1s of squeeze data to return
-    acquisitionStartTime = biopacStartAcquisition(ex);
+    acquisitionStartTime = biopacStartAcquisition();
     [squeezeData, ~] = biopacListen(ex, acquisitionStartTime, 1, [], []);
     biopacEndAcquisition();
     restingSqueezeValue = mean(squeezeData);
