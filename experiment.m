@@ -4,29 +4,13 @@ clear all;
 close all;
 clearvars;
 
-%% Variables
-
-% experiment variables
-data.pptID = 101;                
-data.session = 1; 
-data.code = string(data.pptID) + '-' + string(datetime('now', 'Format', 'ddMMyy'));          % e.g. would be 101-010225 , if pptID = 101 on 01/02/25
-data.filename = [num2str(data.code), '_', num2str(data.session), '_', '_data.mat'];      % e.g. would be 101-010225_1_data.mat , if session = 1 with the above
-
-debug = 0;                        % if debug = 1, will run a minimal version of the experiment
-biopacGain = 200;                 % a prompt will be given to check that it's set to this gain
-scannerTriggerKey = KbName('t');  % waits for this trigger from the scanner before starting the main task   
-
-% folder setup
+%% Folder setup
 dataFolderName = 'data';          % data collected from the experiment will be stored in this folder
-biopacFolderName = 'files';       % the folder containing the mpdev (biopac) files, .dll, mex files - anything that's not a matlab script
+biopacFolderName = 'biopac';      % the folder containing the mpdevmex files and the biopac matlab scripts
 imgsFolderName = 'assets';        % the folder containing images etc used in the experiment
 
-%% Setup
-
-% prompt manual checks
-if debug
-    input('Running in debug mode - PRESS ENTER to continue...'); 
-end
+% add subfolders to path
+addpath(fullfile(pwd, 'biopac'));
 
 % force to run from the experiment's own directory to avoid potential errors
 [scriptDir,~,~] = fileparts(mfilename('fullpath'));
@@ -36,21 +20,17 @@ if ~strcmp(scriptDir, currentDir)
     disp("Changed directory to the script's directory");
 end
 
-% check that the folders actually exist - we could just make them here if they don't exist already, but 
-% more likely the user has mistyped the name so perhaps throwing an error is more appropriate
-if ~exist(dataFolderName, 'dir'), disp("!! The '%s' folder you specified doesn't exist!", dataFolderName); end
-if ~exist(biopacFolderName, 'dir'), disp("!! The '%s' folder you specified doesn't exist!", biopacFolderName); end
-if ~exist(imgsFolderName, 'dir'), disp("!! The '%s' folder you specified doesn't exist!", imgsFolderName); end
+%% Data variables
 
-% set path to experiment folder
-% Added by Selma to avoid conflicting paths/functions
-addpath(scriptDir, '-begin');
+% experiment variables
+data.id = 101;                
+data.session = 1; 
+data.code = string(data.id) + '-' + string(datetime('now', 'Format', 'ddMMyy'));      % e.g. would be 101-010225 , if pptID = 101 on 01/02/25
+data.filename = [num2str(data.code), '_', num2str(data.session), '_', '_data.mat'];      % e.g. would be 101-010225_1_data.mat , if session = 1 with the above
 
-% Seed the random number generator
-rng('shuffle');
-
-% setup psychtoolbox
-PsychDefaultSetup(2); 
+debug = 0;                        % if debug = 1, will run a minimal version of the experiment
+biopacGain = 200;                 % a prompt will be given to check that it's set to this gain
+scannerTriggerKey = KbName('t');  % waits for this trigger from the scanner before starting the main task   
 
 %% Setup - ex
 ex.biopac.mplib = 'mpdev';
@@ -102,20 +82,33 @@ ex.acceptedKeys = KbName('space');
 ex.progressKey = KbName('space'); % to continue after instructions
 % add something with datapixx2 for MRI
 
-%% Start the program
+% setup psychtoolbox
+PsychDefaultSetup(2); 
+
+
+%% Run checks and and start biopac
+
+% move cursor to commandwindow so in case of crash you can type ctrl c there
+commandwindow
+
+% prompt manual checks
+if debug
+    input('> Running in debug mode - PRESS ENTER to continue...');
+end
+
+input(sprintf('> Press enter to confirm: \nID = %s  Code = %s  Session = %s\n', data.id, data.code, data.session));
 
 % initialise dynamometer
 disp("Resetting the biopac connection...");
 restingSqueezeValue = biopacResetConnection(biopacFolderName, ex);
 fprintf('Resting squeeze value just measured from the handle = %0.3f\n', restingSqueezeValue);
-input(sprintf('Set biopac gain to %d then press ENTER to continue...', biopacGain));
+input(sprintf('> Set biopac gain to %d then press ENTER to continue...', biopacGain));
 
-% move cursor to commandwindow so in case of crash you can type ctrl c there
-commandwindow
+%% Start program
 
 % run squeeze calibration
 if ~debug
-    waitForY('\nAre you ready to start calibration (y/n)? ');
+    waitForY('\n> Are you ready to start calibration (y/n)? ');
     screen = openOnscreenWindow(ex); % open a PTB screen with pre-specified parameters
     [~, calibSqueezeData] = squeezeCalibration(ex, screen);
     data.calibSqueezeData = calibSqueezeData;
@@ -125,7 +118,14 @@ if ~debug
     sca; ListenChar(0);
 end
 
-% disconnect dynamometer
+% run main task
+if 
+
+%% End of script
+
+% save data TODO
+
+% unload the dynamometer library
 unloadlibrary('mpdev'); 
 
 
