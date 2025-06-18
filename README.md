@@ -26,9 +26,11 @@ This variable has lots of parts to it, organised into ex.display, ex.biopac, ex.
 The squeezy handle is called a dynamometer. The thing it is plugged into is called an MP150 or MP160 data acquisition device (we have some of both models) but for simplicity we just call them a "biopac" which is the name of the company that makes all this stuff.
 
 ### Biopac gain settings
-The gain setting can be changed between 50, 200, 1000, and 5000 using the switch on the front of the biopac. You should use 50 or 200 gain for your experiment.
+The gain setting can be changed between 50, 200, 1000, and 5000 using the switch on the front of the biopac.
 
-To see what changing the gain does, close matlab, open the biopac software (Acqknowledge), start recording, and try squeezing the handle at each of the different gain settings. It won't cause any damage to change the gain during recording. Notice that using 1000 or 5000 gain will clip off the top of hard squeezes, so don't use these.
+To see what changing the gain does, close matlab, open the biopac software (Acqknowledge), start recording, and try squeezing the handle at each of the different gain settings. It won't cause any damage to change the gain during recording. 
+
+With some setups, using 1000 or 5000 gain will clip off the top of hard squeezes, so it's best to avoid using these for your experiment. Other than that, people seem to have no particular reason for choosing between 50 or 200 gain - just make sure your choice is consistent across all participants otherwise it will be more difficult to compare/analyse.
 
 ### /biopac folder
 In the biopac folder, there are 4 .m files which contain code that communicates with the mex files (also in this folder). Mex files are C code that can be run by matlab scripts, and these ones have been provided by Biopac to use when communicating between matlab and the devices.
