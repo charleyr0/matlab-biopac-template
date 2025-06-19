@@ -32,7 +32,7 @@ biopacGain = 200;                 % a prompt will be given to check that it's se
 scannerTriggerKey = KbName('t');  % waits for this trigger from the scanner before starting the main task   
 
 %% Setup - ex
-ex.biopac.sample_rate = 500; 
+% ex.biopac.sample_rate = 500; 
 ex.biopac.barColourCalibration = [0 0 255];    % set colour of force-meter (blue) titration and initial squeezes
 ex.biopac.ForceColour_ef = [255 0 0];          % set colour of force-meter (red) effort decisions
 ex.biopac.barHeight = 300;                     % set height of bar in pixels
