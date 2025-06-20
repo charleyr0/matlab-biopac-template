@@ -6,7 +6,10 @@ clearvars;
 
 %% Folder setup
 dataFolderName = 'data';          % data collected from the experiment will be stored in this folder
-imgsFolderName = 'assets';        % the folder containing images etc used in the experiment
+assetsFolderName = 'assets';      % the folder containing any images etc used in the experiment
+
+% create a folder for the data to be saved in, if it doesn't exist yet
+if ~isfolder(dataFolderName), mkdir(dataFolderName); end
 
 % add subfolders (containing matlab scripts) to path, so that they can be
 % referenced more easily by the other scripts in this experiment
@@ -33,7 +36,8 @@ ex.debug = 0;
 ex.usingDynamometer = 1;
 ex.usingEyetracker = 0;
 
-biopacGain = 200;                 % a prompt will be given to check that it's set to this gain   
+% a prompt will be given asking you to check that it's set to this gain
+biopacGain = 200;                 
 
 %% Setup - ex
 ex.biopac.sample_rate = 500; 
@@ -88,7 +92,6 @@ ex.progressKey = KbName('space'); % to continue after instructions
 % setup psychtoolbox
 PsychDefaultSetup(2); 
 
-
 %% Run checks and setup before the experiment
 
 % move cursor to commandwindow so in case of crash you can type ctrl c there
@@ -127,6 +130,7 @@ screen = openOnscreenWindow(ex); % open a PTB screen with pre-specified paramete
 %% End of script
 
 % save data
+% TODO
 
 % unload the dynamometer library
 if libisloaded('mpdev'), unloadlibrary('mpdev'); end
