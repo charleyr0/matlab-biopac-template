@@ -23,20 +23,20 @@ end
 %% Data variables
 
 % experiment variables
-data.id = 101;                
-data.session = 1; 
-data.code = string(data.id) + '-' + string(datetime('now', 'Format', 'ddMMyy'));    % e.g. would be 101-010225 , if pptID = 101 on 01/02/25
-data.filename = [num2str(data.code), '-', num2str(data.session), '-data.mat'];      % e.g. would be 101-010225-1-data.mat , if session = 1 with the above
+data.participant.id = 101;                
+data.participant.session = 1; 
+data.participant.code = string(data.participant.id) + '-' + string(datetime('now', 'Format', 'ddMMyy'));    % e.g. would be 101-010225 , if pptID = 101 on 01/02/25
+filename = [num2str(data.participant.code), '-', num2str(data.participant.session), '-data.mat'];      % e.g. would be 101-010225-1-data.mat , if session = 1 with the above
 
 % set these to 0 or 1 and use them to decide whether to run particular things
 ex.debug = 0;
-ex.usingDynamometer = 0;
+ex.usingDynamometer = 1;
 ex.usingEyetracker = 0;
 
 biopacGain = 200;                 % a prompt will be given to check that it's set to this gain   
 
 %% Setup - ex
-% ex.biopac.sample_rate = 500; 
+ex.biopac.sample_rate = 500; 
 ex.biopac.barColourCalibration = [0 0 255];    % set colour of force-meter (blue) titration and initial squeezes
 ex.biopac.ForceColour_ef = [255 0 0];          % set colour of force-meter (red) effort decisions
 ex.biopac.barHeight = 300;                     % set height of bar in pixels
@@ -49,15 +49,16 @@ ex.biopac.titrationResponseDuration = 3;       % how long are titration trials?
 ex.biopac.effortTime = 3;                      % how long is the effort window for decisions
 
 % define some colours, to use later without typing out the full colour code
-ex.colours.white = 1;
-ex.colours.black = 0;
-ex.colours.yellow = [255 255 0];
-ex.colours.red = [255, 0, 0] / 255;
-ex.colours.green = [20, 244, 4] / 255;
-ex.colours.blue = [28, 4, 244] / 255;
+ex.colours.white =  [255 255 255] / 255;
+ex.colours.black =  [0 0 0] / 255;
+ex.colours.grey =   [130 130 130] / 255;
+ex.colours.yellow = [255 255 0] / 255;
+ex.colours.red =    [255 0 0] / 255;
+ex.colours.green =  [20 244 4] / 255;
+ex.colours.blue =   [28 4 244] / 255;
 
 % some display settings - these are used by openOnScreenWindow for setting up the screen
-ex.display.backgroundColour = ex.colours.black;
+ex.display.backgroundColour = ex.colours.grey;
 ex.display.screenRect = [0 0 1920 1080]; %screen.fullScrn = [(1920/2)+100 200 1920-200 1080-200]
 ex.display.textSize = 35;
 ex.display.textFont = 'Arial';
@@ -94,36 +95,38 @@ PsychDefaultSetup(2);
 commandwindow
 
 % prompt manual checks
-input(sprintf('> Press enter to confirm: \nID = %d  Code = %s  Session = %d\n', data.id, data.code, data.session));
-input(sprintf('> Press enter to confirm (1=on, 0=off): debug = %d, dynamometer = %d\n', ex.debug, ex.usingDynamometer));
+input(sprintf('> Press enter to confirm: \n  ID = %d  Code = %s  Session = %d', data.participant.id, data.participant.code, data.participant.session));
+input(sprintf('> Press enter to confirm (1=on, 0=off): debug = %d, dynamometer = %d', ex.debug, ex.usingDynamometer));
 
 % initialise dynamometer
 if ex.usingDynamometer
-    disp("Resetting the biopac connection...");
+    fprintf("> Resetting the biopac connection... ");
     restingSqueezeValue = biopacResetConnection(ex);
-    fprintf('Resting squeeze value just measured from the handle = %0.3f\n', restingSqueezeValue);
+    fprintf('> Resting squeeze value just measured from the handle = %0.3f\n', restingSqueezeValue);
     input(sprintf('> Set biopac gain to %d then press ENTER to continue...', biopacGain));
 end
 
 %% Start the experiment
 
 % run squeeze calibration
-if ~ex.debug && usingDynamometer
-    waitForY('\n> Are you ready to start calibration (y/n)? ');
+if ~ex.debug && ex.usingDynamometer
+    waitForY('> Are you ready to start calibration (y/n)? ');
     screen = openOnscreenWindow(ex); % open a PTB screen with pre-specified parameters
     [~, calibSqueezeData] = squeezeCalibration(ex, screen);
     data.calibSqueezeData = calibSqueezeData;
-    save([dataFolderName, '/', data.filename], 'data', 'ex', 'screen');
+    save([dataFolderName, '/', filename], 'data', 'ex', 'screen');
 
     ShowCursor(screen.window);
     sca; ListenChar(0);
 end
 
 % run main task
+waitForY('> Are you ready to start the main task (y/n)? ');
+screen = openOnscreenWindow(ex); % open a PTB screen with pre-specified parameters
 
 %% End of script
 
 % save data
 
 % unload the dynamometer library
-unloadlibrary('mpdev'); 
+if libisloaded('mpdev'), unloadlibrary('mpdev'); end
