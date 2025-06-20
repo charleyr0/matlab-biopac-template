@@ -1,10 +1,15 @@
 function [screen] = openOnscreenWindow(ex)
 
-    % you should pass ex.display which contains setup variables for this
-    % function.
+    % this function expects some variables in ex -
+    % ex.display.textSize and ex.display.textFont
+    % for setting the default text settings for new the window this opens
     
     % setup the display
-    screen.scrNum = max(Screen('Screens'));              % displays always on the primary monitor I think
+    screen.scrNum = max(Screen('Screens'));  % displays always on the primary monitor I think
+
+    % sync stuff
+    Screen('Preference','SyncTestSettings', 0.01, 40, 0.2, 5); % sets more forgiving test parameters which removes the flashing warning triangle - see psychtoolbox.org/docs/SyncTrouble
+    Screen('Preference', 'SkipSyncTests', 0);
     
     % open a window
     [screen.window, screen.windowRect] = PsychImaging('OpenWindow', screen.scrNum, ex.display.backgroundColour, ex.display.screenRect);

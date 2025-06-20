@@ -8,7 +8,8 @@ clearvars;
 dataFolderName = 'data';          % data collected from the experiment will be stored in this folder
 imgsFolderName = 'assets';        % the folder containing images etc used in the experiment
 
-% add subfolders (containing matlab scripts) to path
+% add subfolders (containing matlab scripts) to path, so that they can be
+% referenced more easily by the other scripts in this experiment
 addpath(fullfile(pwd, 'biopac'));
 
 % force to run from the experiment's own directory to avoid potential errors
@@ -24,12 +25,15 @@ end
 % experiment variables
 data.id = 101;                
 data.session = 1; 
-data.code = string(data.id) + '-' + string(datetime('now', 'Format', 'ddMMyy'));         % e.g. would be 101-010225 , if pptID = 101 on 01/02/25
+data.code = string(data.id) + '-' + string(datetime('now', 'Format', 'ddMMyy'));    % e.g. would be 101-010225 , if pptID = 101 on 01/02/25
 data.filename = [num2str(data.code), '-', num2str(data.session), '-data.mat'];      % e.g. would be 101-010225-1-data.mat , if session = 1 with the above
 
-debug = 0;                        % if debug = 1, will run a minimal version of the experiment
-biopacGain = 200;                 % a prompt will be given to check that it's set to this gain
-scannerTriggerKey = KbName('t');  % waits for this trigger from the scanner before starting the main task   
+% set these to 0 or 1 and use them to decide whether to run particular things
+ex.debug = 0;
+ex.usingDynamometer = 0;
+ex.usingEyetracker = 0;
+
+biopacGain = 200;                 % a prompt will be given to check that it's set to this gain   
 
 %% Setup - ex
 % ex.biopac.sample_rate = 500; 
@@ -75,7 +79,7 @@ ex.screenEndWaitTime = 4;
 % keyboard
 KbName('UnifyKeyNames');
 ex.escapeKey = KbName('ESCAPE');
-ex.timingKey = KbName('t');
+ex.scannerTriggerKey = KbName('t');
 ex.acceptedKeys = KbName('space');
 ex.progressKey = KbName('space'); % to continue after instructions
 % TODO add something with datapixx2 for MRI (??)
@@ -84,28 +88,27 @@ ex.progressKey = KbName('space'); % to continue after instructions
 PsychDefaultSetup(2); 
 
 
-%% Run checks and and start biopac
+%% Run checks and setup before the experiment
 
 % move cursor to commandwindow so in case of crash you can type ctrl c there
 commandwindow
 
 % prompt manual checks
-if debug
-    input('> Running in debug mode - PRESS ENTER to continue...');
-end
-
 input(sprintf('> Press enter to confirm: \nID = %d  Code = %s  Session = %d\n', data.id, data.code, data.session));
+input(sprintf('> Press enter to confirm (1=on, 0=off): debug = %d, dynamometer = %d\n', ex.debug, ex.usingDynamometer));
 
 % initialise dynamometer
-disp("Resetting the biopac connection...");
-restingSqueezeValue = biopacResetConnection(ex);
-fprintf('Resting squeeze value just measured from the handle = %0.3f\n', restingSqueezeValue);
-input(sprintf('> Set biopac gain to %d then press ENTER to continue...', biopacGain));
+if ex.usingDynamometer
+    disp("Resetting the biopac connection...");
+    restingSqueezeValue = biopacResetConnection(ex);
+    fprintf('Resting squeeze value just measured from the handle = %0.3f\n', restingSqueezeValue);
+    input(sprintf('> Set biopac gain to %d then press ENTER to continue...', biopacGain));
+end
 
-%% Start program
+%% Start the experiment
 
 % run squeeze calibration
-if ~debug
+if ~ex.debug && usingDynamometer
     waitForY('\n> Are you ready to start calibration (y/n)? ');
     screen = openOnscreenWindow(ex); % open a PTB screen with pre-specified parameters
     [~, calibSqueezeData] = squeezeCalibration(ex, screen);
@@ -124,6 +127,3 @@ end
 
 % unload the dynamometer library
 unloadlibrary('mpdev'); 
-
-
-
