@@ -33,7 +33,7 @@ data.participant.code = string(data.participant.id) + '-' + string(datetime('now
 filename = [num2str(data.participant.code), '-', num2str(data.participant.session), '-data.mat'];      % e.g. would be 101-010225-1-data.mat , if session = 1 with the above
 
 % set these to 0 or 1 and use them to decide whether to run particular things
-ex.debug = 0;
+ex.debug = 1;
 ex.usingDynamometer = 1;
 ex.usingEyelink = 0;
 ex.usingScanner = 0;
@@ -140,11 +140,12 @@ if ~ex.debug && ex.usingDynamometer
     data.calibSqueezeData = calibSqueezeData;
     save([dataFolderName, '/', filename], 'data', 'ex', 'screen');
 
+    disp(ex.calib.mvc);
     ShowCursor(screen.window);
     sca; ListenChar(0);
 
 elseif ex.debug
-    ex.calib.mvc = 0.5;
+    ex.calib.mvc = 1;
     
 end
 
@@ -153,8 +154,25 @@ waitForY('> Are you ready to start the main task (y/n)? ');
 screen = openOnscreenWindow(ex); % open a PTB screen with pre-specified parameters
 fixation(ex, screen);
 WaitSecs(1);
-forceData = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, ex.calib.mvc, 0.5, 'Squeeze!', 3, 0.5, 1);
+
+GetSecs;
+
+[forceData, success] = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, ex.calib.mvc, 0.3, 'Squeeze!', 3, 0.5, 1);
+
 fixation(ex, screen);
+disp(success);
+WaitSecs(1);
+
+temp = GetSecs;
+[forceData, success] = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, ex.calib.mvc, 0.7, 'Squeeze!', 5, 0.7, 3);
+disp(GetSecs - temp);
+fixation(ex, screen);
+disp(success);
+WaitSecs(1);
+
+[forceData, success] = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, ex.calib.mvc, 0.9, 'Squeeze!', 3, 0.9, 1);
+fixation(ex, screen);
+disp(success);
 WaitSecs(1);
 
 %% End of script
