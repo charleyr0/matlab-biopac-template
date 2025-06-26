@@ -153,7 +153,7 @@ waitForY('> Are you ready to start the main task (y/n)? ');
 screen = openOnscreenWindow(ex); % open a PTB screen with pre-specified parameters
 fixation(ex, screen);
 WaitSecs(1);
-forceData = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, ex.calib.mvc, 0.5, 'Squeeze!', 2);
+forceData = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, ex.calib.mvc, 0.5, 'Squeeze!', 3, 0.5, 1);
 fixation(ex, screen);
 WaitSecs(1);
 
