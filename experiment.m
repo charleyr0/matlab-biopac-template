@@ -14,6 +14,7 @@ if ~isfolder(dataFolderName), mkdir(dataFolderName); end
 % add subfolders (containing matlab scripts) to path, so that they can be
 % referenced more easily by the other scripts in this experiment
 addpath(fullfile(pwd, 'biopac'));
+addpath(fullfile(pwd, 'eyelink'));
 
 % force to run from the experiment's own directory to avoid potential errors
 [scriptDir,~,~] = fileparts(mfilename('fullpath'));
@@ -34,23 +35,13 @@ filename = [num2str(data.participant.code), '-', num2str(data.participant.sessio
 % set these to 0 or 1 and use them to decide whether to run particular things
 ex.debug = 0;
 ex.usingDynamometer = 1;
-ex.usingEyetracker = 0;
+ex.usingEyelink = 0;
+ex.usingScanner = 0;
 
 % a prompt will be given asking you to check that it's set to this gain
 biopacGain = 200;                 
 
 %% Setup - ex
-ex.biopac.sample_rate = 500; 
-ex.biopac.barColourCalibration = [0 0 255];    % set colour of force-meter (blue) titration and initial squeezes
-ex.biopac.ForceColour_ef = [255 0 0];          % set colour of force-meter (red) effort decisions
-ex.biopac.barHeight = 300;                     % set height of bar in pixels
-ex.biopac.forceLevels = [.49 .56 .63 .70];     % effort levels
-ex.biopac.forceLevels_x = [.61 .89 1.11 1.29]; % multiplication for visualization of target bar in drawResonseFlip
-ex.biopac.forceLength = 1;                     % set length of time at which force should be above threshold
-ex.biopac.forceLength_lh = 3;                  % set length of time at which force should be above threshold
-ex.biopac.barmaxforce = 1;                     % set relative height of the force-bar (as %MVC)                  
-ex.biopac.titrationResponseDuration = 3;       % how long are titration trials?
-ex.biopac.effortTime = 3;                      % how long is the effort window for decisions
 
 % define some colours, to use later without typing out the full colour code
 ex.colours.white =  [255 255 255] / 255;
@@ -61,16 +52,23 @@ ex.colours.red =    [255 0 0] / 255;
 ex.colours.green =  [20 244 4] / 255;
 ex.colours.blue =   [28 4 244] / 255;
 
+% fixation cross appearance
+ex.fixation.colour = ex.colours.white;
+ex.fixation.barWidth = 3;
+ex.fixation.barLength = 20;
+
 % some display settings - these are used by openOnScreenWindow for setting up the screen
 ex.display.backgroundColour = ex.colours.grey;
-ex.display.screenRect = [0 0 1920 1080]; %screen.fullScrn = [(1920/2)+100 200 1920-200 1080-200]
+ex.display.screenRect = [0 0 800 600]; %screen.fullScrn = [(1920/2)+100 200 1920-200 1080-200]
 ex.display.textSize = 35;
 ex.display.textFont = 'Arial';
 
 % variables used for the squeeze calibration
-ex.calib.initialSqueezeBarHeightDivisor = 2;  % scales the bar down - depends on your gain - 4 is good for 200 gain; 2 for 50 gain; do not use 1000 or 5000 gain with the dynamometer (too high)
+ex.calib.initialSqueezeBarHeightDivisor = 4;  % scales the bar down - depends on your gain - 4 is good for 200 gain; 2 for 50 gain; you probably shouldn't use 1000 or 5000 gain with the dynamometer
 ex.calib.goals = [0, 1.1, 1.05];              % the heights of the yellow bar (as a multiplier of their initial attempt's max value) on their 3 attempts. 1st one should be 0 (which will draw no bar)
 ex.calib.textTime = 2;                        % how long (secs) to display each instruction text for
+ex.calib.trialDuration = 3;                   
+ex.calib.barColour = ex.colours.blue;
 ex.calib.text = {                             % the prompts to show throughout the calibration procedure
   'You will now complete a short procedure to\n \n determine your maximum grip strength.',...
   'Get ready to squeeze as strongly as you can...',...
@@ -78,15 +76,22 @@ ex.calib.text = {                             % the prompts to show throughout t
   'Try one last time!', ...
   'Well done! Please wait for the next instructions.'};
 
+% variables about the biopac and squeezing
+ex.biopac.sampleRate = 500; 
+ex.biopac.barColourTrials = ex.colours.red;               
+ex.biopac.trialDuration = 3;     
+ex.biopac.squeezeTimeTotal = 3;
+ex.biopac.squeezeTimeMin = 1;
+
 % how long to wait before closing the screen at the end of each part of the task
 ex.screenEndWaitTime = 4;
 
 % keyboard
 KbName('UnifyKeyNames');
-ex.escapeKey = KbName('ESCAPE');
-ex.scannerTriggerKey = KbName('t');
-ex.acceptedKeys = KbName('space');
-ex.progressKey = KbName('space'); % to continue after instructions
+ex.keys.escapeKey = KbName('ESCAPE');
+ex.keys.scannerTriggerKey = KbName('t');
+ex.keys.acceptedKeys = KbName('space');
+ex.keys.progressKey = KbName('space'); % to continue after instructions
 % TODO add something with datapixx2 for MRI (??)
 
 % setup psychtoolbox
@@ -101,12 +106,27 @@ commandwindow
 input(sprintf('> Press enter to confirm: \n  ID = %d  Code = %s  Session = %d', data.participant.id, data.participant.code, data.participant.session));
 input(sprintf('> Press enter to confirm (1=on, 0=off): debug = %d, dynamometer = %d', ex.debug, ex.usingDynamometer));
 
-% initialise dynamometer
+% initialise dynamometer, if using
 if ex.usingDynamometer
-    fprintf("> Resetting the biopac connection... ");
+    fprintf("> Resetting the biopac connection...\n ");
     restingSqueezeValue = biopacResetConnection(ex);
     fprintf('> Resting squeeze value just measured from the handle = %0.3f\n', restingSqueezeValue);
     input(sprintf('> Set biopac gain to %d then press ENTER to continue...', biopacGain));
+end
+
+% initialise eyelink, if using
+if ex.usingEyelink
+    [success, ex.eyelinkSettings] = eyelinkInitialise(screen);
+    if success, disp("> Eyelink initialised successfully"); end
+    % TODO some other stuff in el_start - deal (here) with folder/files,
+    % then look at el_defaults or somethn. when doing calib just call one
+    % line
+end
+
+% initial datapixx projector, if using TODO not used yet
+if ex.usingScanner
+    PsychDataPixx('SetDummyMode', 0);
+    PsychDataPixx('Open');
 end
 
 %% Start the experiment
@@ -114,18 +134,28 @@ end
 % run squeeze calibration
 if ~ex.debug && ex.usingDynamometer
     waitForY('> Are you ready to start calibration (y/n)? ');
-    screen = openOnscreenWindow(ex); % open a PTB screen with pre-specified parameters
-    [~, calibSqueezeData] = squeezeCalibration(ex, screen);
+    screen = openOnscreenWindow(ex);
+
+    [ex.calib.mvc, calibSqueezeData] = squeezeCalibration(ex, screen);
     data.calibSqueezeData = calibSqueezeData;
     save([dataFolderName, '/', filename], 'data', 'ex', 'screen');
 
     ShowCursor(screen.window);
     sca; ListenChar(0);
+
+elseif ex.debug
+    ex.calib.mvc = 0.5;
+    
 end
 
 % run main task
 waitForY('> Are you ready to start the main task (y/n)? ');
 screen = openOnscreenWindow(ex); % open a PTB screen with pre-specified parameters
+fixation(ex, screen);
+WaitSecs(1);
+forceData = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, ex.calib.mvc, 0.5, 'Squeeze!', 2);
+fixation(ex, screen);
+WaitSecs(1);
 
 %% End of script
 

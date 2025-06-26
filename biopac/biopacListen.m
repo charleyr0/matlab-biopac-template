@@ -41,10 +41,10 @@ function [squeezeData, timeOfLastAcquisition] = biopacListen(ex, timeOfLastAcqui
     % nothing and returns immediately.
 
     % calculate how many samples need to be read from the Biopac
-    queueLen = @(lastread) 2 * floor((GetSecs-lastread) * ex.biopac.sample_rate);
+    queueLen = @(lastread) 2 * floor((GetSecs-lastread) * ex.biopac.sampleRate);
     
     % set up recording buffer of 3 seconds, and buffer
-    record = nan * zeros(ex.biopac.sample_rate * ISI, 1);
+    record = nan * zeros(ex.biopac.sampleRate * ISI, 1);
     lq = queueLen(timeOfLastAcquisition);
     buffer = nan * zeros(lq,1);
 

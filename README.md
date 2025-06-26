@@ -13,12 +13,12 @@ Other working software combinations are available, but if you're downloading eve
 Run the experiment.m script in MATLAB.
 
 ## Using psychtoolbox
-- When developing your task, use two monitors. Have the matlab editor window on the second monitor, and when you run the task it will show on your laptop/primary monitor. This way, the command window is always visible whilst the psychtoolbox screen is open, so you can see any errors or outputs, and also you can force close the script without the whole software crashing, by doing the following:
+- When developing your task, it's easiest to use two screens. Have the matlab editor window on the second monitor, and when you run the task it will show on your laptop/primary monitor. This way, the command window is always visible whilst the psychtoolbox screen is open, so you can see any errors or outputs, and also you can force close the script without the whole software crashing, by doing the following:
 	1. Press alt+tab to switch back to matlab 
 	2. Press ctrl+c a few times
 	3. Type sca and press enter. Or, if it doesn't type into the command window yet, you need to press ctrl+c a few more times. sca means "screen close all" and it tells psychtoolbox to force-close its windows.
 - If you install PTB and matlab and gstreamer on a new pc, make a note of the versions of all those things you use
-
+- If you don't have two screens, set the psychtoolbox window size to just a section of the screen, e.g. [0 0 800 600] instead of [0 0 1920 1080].
 
 ## Things in this script
 ### 'ex' variable
