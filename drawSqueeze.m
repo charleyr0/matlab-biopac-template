@@ -1,4 +1,4 @@
-function drawSqueeze(ex, screen, barColour, outlineColour, targetLineColour, squeezeLevel, targetLineY, cueText)
+function drawSqueeze(ex, screen, barColour, outlineColour, targetLineColour, squeezeLevel, targetLineLevel, cueText)
 
     % this function should only be called by squeeze.m
 
@@ -21,14 +21,16 @@ function drawSqueeze(ex, screen, barColour, outlineColour, targetLineColour, squ
     Screen('FrameRect', screen.window, outlineColour, [(screen.width/2)-25 (screen.height/2)-(barHeight/2) (screen.width/2)+25 (screen.height/2)+(barHeight/2)], 4);
 
     % draw the bar
-    Screen('FillRect', screen.window, barColour, [(screen.width/2)-25 (screen.height/2)+(barHeight/2)-squeezeLevel/ex.biopac.barMaxForce (screen.width/2)+25 (screen.height/2)+(barHeight/2)]);  % These are the coordinates for the Force Feedback Bar; Original height*S
+    baseLine = (screen.height/2)+(barHeight/2); % y of bottom of bar outline
+    Screen('FillRect', screen.window, barColour, [(screen.width/2)-25 baseLine-squeezeLevel*ex.biopac.barMaxForce (screen.width/2)+25 baseLine]);  % These are the coordinates for the Force Feedback Bar; Original height*S
     
     % draw the target level (yellow line)
-    if targetLineY ~= 0
-        x1 = (-25-50/8);
-        x2 = (+25+50/8);
-        y = (barHeight/2) - targetLineY*barHeight/ex.biopac.barMaxForce;
-        Screen('DrawLines', screen.window, [x1 x2 ; y y], 7, targetLineColour, [(screen.width/2) (screen.height/2)], 0);
+    % targetLineLevel is e.g. 0.5 for 50% of their MVC
+    if targetLineLevel ~= 0
+        x1 = (screen.width/2) -25-50/8 ;
+        x2 = (screen.width/2) +25+50/8 ;
+        y = baseLine - targetLineLevel*barHeight;
+        Screen('DrawLines', screen.window, [x1 x2 ; y y], 7, targetLineColour);
     end
     
     % draw some cue text above the bar (e.g. "GO!")

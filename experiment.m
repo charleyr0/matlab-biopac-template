@@ -182,5 +182,6 @@ WaitSecs(1);
 % save data
 % TODO
 
-% unload the dynamometer library
+% unload the dynamometer library TODO can we just leave it? so we don't
+% have to load/unload on every run?
 if libisloaded('mpdev'), unloadlibrary('mpdev'); end

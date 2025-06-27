@@ -101,7 +101,7 @@ function [squeezeData, timeOfLastAcquisition] = biopacListen(ex, timeOfLastAcqui
 
         %%%% display the bar
         if exist('mu','var') && ~isempty(drawingFunction) % i think the very first time, mu won't exist?
-            %disp(mu); % uncomment if you want to have a look at every squeeze value
+            disp(mu); % uncomment if you want to have a look at every squeeze value
             drawingFunction(mu);
         end
     
