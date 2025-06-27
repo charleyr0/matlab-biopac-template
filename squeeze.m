@@ -1,4 +1,4 @@
-function [forceData, success] = squeeze(ex, screen, barColour, outlineColour, targetLineColour, squeezeBarHeightDivisor, targetLineHeight, cueText, trialDuration, goal, timeAboveForSuccess)
+function [forceData, success] = squeeze(ex, screen, barColour, outlineColour, targetLineColour, squeezeBarHeightDivisor, goal, cueText, trialDuration, timeAboveForSuccess)
    
     % TODO the squeezeBarHeightDivisor and the goal should come from the
     % same thing (only keep goal probably?)
@@ -18,7 +18,7 @@ function [forceData, success] = squeeze(ex, screen, barColour, outlineColour, ta
     acquisitionStartTime = biopacStartAcquisition();
 
     % Run the squeeze
-    fbfunc = @(f) drawSqueeze(ex, screen, barColour, outlineColour, targetLineColour, f()/squeezeBarHeightDivisor, targetLineHeight, cueText); 
+    fbfunc = @(f) drawSqueeze(ex, screen, barColour, outlineColour, targetLineColour, f()/squeezeBarHeightDivisor, goal, cueText); 
     [forceData, ~] = biopacListen(ex, acquisitionStartTime, trialDuration, [], fbfunc);
 
     biopacEndAcquisition();

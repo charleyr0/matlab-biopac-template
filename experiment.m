@@ -77,13 +77,21 @@ ex.calib.text = {                             % the prompts to show throughout t
   'Well done! Please wait for the next instructions.'};
 
 % variables about the biopac and squeezing
-ex.biopac.sampleRate = 500; 
-ex.biopac.barColourTrials = ex.colours.red;               
+ex.biopac.sampleRate = 500;               
 ex.biopac.trialDuration = 3;     
 ex.biopac.squeezeTimeTotal = 3;
 ex.biopac.squeezeTimeMin = 1;
 ex.biopac.barHeightPixels = 300; % height of the bar in pixels
 ex.biopac.barScaleFactor = 0.5; % what proportion of the height of the bar should correspond to their MVC? note this will also scale the yellow target lines
+
+% define some settings for a squeeze TODO implement this
+ex.squeeze1.trialDurationSecs = 5;
+ex.squeeze1.minAboveLineSecs = 3;
+ex.squeeze1.barColour = ex.colours.blue;
+ex.squeeze1.targetColour = ex.colours.yellow;
+ex.squeeze1.targetLevel = 0.7;
+ex.squeeze1.barHeightPixels = 300;
+ex.squeeze1.barScaleFactor = 0.5; % what proportion of the height of the bar should correspond to their MVC? note this will also scale the yellow target lines
 
 % how long to wait before closing the screen at the end of each part of the task
 ex.screenEndWaitTime = 4;
@@ -159,20 +167,20 @@ WaitSecs(1);
 
 GetSecs;
 
-[forceData, success] = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, ex.calib.mvc, 0.5, 'Squeeze!', 3, 0.5, 1);
+[forceData, success] = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, ex.calib.mvc, 0.5, 'Squeeze!', 3, 1);
 
 fixation(ex, screen);
 disp(success);
 WaitSecs(1);
 
 temp = GetSecs;
-[forceData, success] = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, ex.calib.mvc, 0.5, 'Squeeze!', 5, 0.5, 3);
+[forceData, success] = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, ex.calib.mvc, 0.5, 'Squeeze!', 5, 3);
 disp(GetSecs - temp);
 fixation(ex, screen);
 disp(success);
 WaitSecs(1);
 
-[forceData, success] = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, ex.calib.mvc, 0.5, 'Squeeze!', 3, 0.5, 1);
+[forceData, success] = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, ex.calib.mvc, 0.5, 'Squeeze!', 3, 1);
 fixation(ex, screen);
 disp(success);
 WaitSecs(1);
