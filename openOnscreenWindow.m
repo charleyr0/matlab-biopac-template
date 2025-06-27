@@ -17,7 +17,7 @@ function [screen] = openOnscreenWindow(ex)
 
     % sync stuff
     Screen('Preference','SyncTestSettings', 0.01, 40, 0.2, 5); % sets more forgiving test parameters which removes the flashing warning triangle - see psychtoolbox.org/docs/SyncTrouble
-    Screen('Preference', 'SkipSyncTests', 0);
+    Screen('Preference', 'SkipSyncTests', ex.debug); % skip sync tests iff debug mode
     
     % open a window, get the width and height
     [screen.window, screen.windowRect] = PsychImaging('OpenWindow', screen.scrNum, ex.display.backgroundColour, ex.display.screenRect); % TODO do we even need to keep windowRect in screen?
