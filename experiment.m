@@ -83,7 +83,7 @@ ex.biopac.trialDuration = 3;
 ex.biopac.squeezeTimeTotal = 3;
 ex.biopac.squeezeTimeMin = 1;
 ex.biopac.barHeightPixels = 300; % height of the bar in pixels
-ex.biopac.barMaxForce = 0.9; % set relative height of the force-bar (as %MVC)
+ex.biopac.barScaleFactor = 0.5; % set relative height of the force-bar (as multiplier of their MVC) TODO instead, pass this as scaleFactor to squeeze function(s)
 
 % how long to wait before closing the screen at the end of each part of the task
 ex.screenEndWaitTime = 4;
@@ -159,25 +159,26 @@ WaitSecs(1);
 
 GetSecs;
 
-[forceData, success] = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, ex.calib.mvc, 0.3, 'Squeeze!', 3, 0.5, 1);
+[forceData, success] = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, ex.calib.mvc, 0.5, 'Squeeze!', 3, 0.5, 1);
 
 fixation(ex, screen);
 disp(success);
 WaitSecs(1);
 
 temp = GetSecs;
-[forceData, success] = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, ex.calib.mvc, 0.7, 'Squeeze!', 5, 0.7, 3);
+[forceData, success] = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, ex.calib.mvc, 0.5, 'Squeeze!', 5, 0.5, 3);
 disp(GetSecs - temp);
 fixation(ex, screen);
 disp(success);
 WaitSecs(1);
 
-[forceData, success] = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, ex.calib.mvc, 0.9, 'Squeeze!', 3, 0.9, 1);
+[forceData, success] = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, ex.calib.mvc, 0.5, 'Squeeze!', 3, 0.5, 1);
 fixation(ex, screen);
 disp(success);
 WaitSecs(1);
 
 %% End of script
+sca;
 
 % save data
 % TODO

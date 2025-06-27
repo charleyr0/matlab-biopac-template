@@ -11,25 +11,30 @@ function drawSqueeze(ex, screen, barColour, outlineColour, targetLineColour, squ
 
     barHeight = ex.biopac.barHeightPixels; % height of the white outline bar not the squeeze bar TODO store barHeight/2 instead
 
-    % this line restricts the minimum height between 0 and 1.5 
+    % this line adjusts their squeeze level to fit into the bar -
+    % first it restricts the minimum height between 0 and 1.5 
     %   0 because sometimes at rest it is very slightly negative
     %   1.5 because higher than that overshoots the bar
-    %   then scale it to the absolute bar height
-    squeezeLevel = max(0, min(1.5, squeezeLevel)) * barHeight; 
+    % then scales it to the absolute bar height and the scale factor
+
+    % squeezeLevel adjustments
+    squeezeLevel = squeezeLevel * barHeight * ex.biopac.barScaleFactor; % scale the raw value to fit the onscreen bar
+    squeezeLevel = max(0, squeezeLevel); % if it's negative, set it to 0
+    squeezeLevel = min(squeezeLevel, barHeight); % if it would overshoot the outline, cap it at the outline's height
 
     % draw the bar outline
     Screen('FrameRect', screen.window, outlineColour, [(screen.width/2)-25 (screen.height/2)-(barHeight/2) (screen.width/2)+25 (screen.height/2)+(barHeight/2)], 4);
 
-    % draw the bar
+    % draw the squeeze bar
     baseLine = (screen.height/2)+(barHeight/2); % y of bottom of bar outline
-    Screen('FillRect', screen.window, barColour, [(screen.width/2)-25 baseLine-squeezeLevel*ex.biopac.barMaxForce (screen.width/2)+25 baseLine]);  % These are the coordinates for the Force Feedback Bar; Original height*S
+    Screen('FillRect', screen.window, barColour, [(screen.width/2)-25 baseLine-squeezeLevel (screen.width/2)+25 baseLine]);  % These are the coordinates for the Force Feedback Bar; Original height*S
     
     % draw the target level (yellow line)
     % targetLineLevel is e.g. 0.5 for 50% of their MVC
     if targetLineLevel ~= 0
         x1 = (screen.width/2) -25-50/8 ;
         x2 = (screen.width/2) +25+50/8 ;
-        y = baseLine - targetLineLevel*barHeight;
+        y = baseLine - targetLineLevel * barHeight * ex.biopac.barScaleFactor;
         Screen('DrawLines', screen.window, [x1 x2 ; y y], 7, targetLineColour);
     end
     
