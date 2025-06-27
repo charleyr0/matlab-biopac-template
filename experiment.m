@@ -82,6 +82,8 @@ ex.biopac.barColourTrials = ex.colours.red;
 ex.biopac.trialDuration = 3;     
 ex.biopac.squeezeTimeTotal = 3;
 ex.biopac.squeezeTimeMin = 1;
+ex.biopac.barHeightPixels = 300; % height of the bar in pixels
+ex.biopac.barMaxForce = 0.9; % set relative height of the force-bar (as %MVC)
 
 % how long to wait before closing the screen at the end of each part of the task
 ex.screenEndWaitTime = 4;
