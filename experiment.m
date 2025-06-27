@@ -83,7 +83,7 @@ ex.biopac.trialDuration = 3;
 ex.biopac.squeezeTimeTotal = 3;
 ex.biopac.squeezeTimeMin = 1;
 ex.biopac.barHeightPixels = 300; % height of the bar in pixels
-ex.biopac.barScaleFactor = 0.5; % set relative height of the force-bar (as multiplier of their MVC) TODO instead, pass this as scaleFactor to squeeze function(s)
+ex.biopac.barScaleFactor = 0.5; % what proportion of the height of the bar should correspond to their MVC? note this will also scale the yellow target lines
 
 % how long to wait before closing the screen at the end of each part of the task
 ex.screenEndWaitTime = 4;
