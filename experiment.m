@@ -41,7 +41,7 @@ ex.usingScanner = 0;
 % a prompt will be given asking you to check that it's set to this gain
 biopacGain = 200;                 
 
-%% Setup - ex
+%% Setup - experiment variables
 
 % define some colours, to use later without typing out the full colour code
 ex.colours.white =  [255 255 255] / 255;
@@ -79,19 +79,18 @@ ex.calib.text = {                             % the prompts to show throughout t
 % variables about the biopac and squeezing
 ex.biopac.sampleRate = 500;               
 ex.biopac.trialDuration = 3;     
-ex.biopac.squeezeTimeTotal = 3;
-ex.biopac.squeezeTimeMin = 1;
-ex.biopac.barHeightPixels = 300; % height of the bar in pixels
-ex.biopac.barScaleFactor = 0.5; % what proportion of the height of the bar should correspond to their MVC? note this will also scale the yellow target lines
 
-% define some settings for a squeeze TODO implement this
-ex.squeeze1.trialDurationSecs = 5;
-ex.squeeze1.minAboveLineSecs = 3;
-ex.squeeze1.barColour = ex.colours.blue;
-ex.squeeze1.targetColour = ex.colours.yellow;
-ex.squeeze1.targetLevel = 0.7;
+% set up for a type of squeeze
+ex.squeeze1.trialDuration = 3;                   % (secs) how long should the squeeze show for?
+ex.squeeze1.squeezeTimeForSuccess = 1;           % (secs) what's the minimum time needed to squeeze above the bar to be counted as success?
+ex.squeeze1.barHeightPixels = 300;               % height of the bar in pixels
+ex.squeeze1.barScaleFactor = 0.5;                % what proportion of the height of the bar should correspond to their MVC? e.g. if 0.5, then if they squeeze at their MVC the bar fill be half filled up. Note this will also scale the position of yellow target lines as they are a % of the MVC.
+ex.squeeze1.targetLevel = 0.7;                   % e.g. 0.7 means they have to try to squeeze at 70% of their MVC
+ex.squeeze1.targetColour = ex.colours.yellow;    % colour of the target bar (usually yellow)
+ex.squeeze1.barColour = ex.colours.blue;         % colour of the bar that moves (usually blue or red)
+ex.squeeze1.barOutlineColour = ex.colours.white; % colour of the outline (usually white)
 ex.squeeze1.barHeightPixels = 300;
-ex.squeeze1.barScaleFactor = 0.5; % what proportion of the height of the bar should correspond to their MVC? note this will also scale the yellow target lines
+ex.squeeze1.cueText = 'Squeeze!';
 
 % how long to wait before closing the screen at the end of each part of the task
 ex.screenEndWaitTime = 4;
@@ -167,8 +166,7 @@ WaitSecs(1);
 
 GetSecs;
 
-[forceData, success] = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, ex.calib.mvc, 0.5, 'Squeeze!', 3, 1);
-
+[forceData, success] = squeeze(ex, screen, ex.squeeze1);
 fixation(ex, screen);
 disp(success);
 WaitSecs(1);
