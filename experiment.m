@@ -76,25 +76,6 @@ ex.calib.text = {                             % the prompts to show throughout t
   'Try one last time!', ...
   'Well done! Please wait for the next instructions.'};
 
-% variables about the biopac and squeezing
-ex.biopac.sampleRate = 500;               
-ex.biopac.trialDuration = 3;     
-
-% set up for a type of squeeze
-ex.squeeze1.trialDuration = 3;                   % (secs) how long should the squeeze show for?
-ex.squeeze1.squeezeTimeForSuccess = 1;           % (secs) what's the minimum time needed to squeeze above the bar to be counted as success?
-ex.squeeze1.barHeightPixels = 300;               % height of the bar in pixels
-ex.squeeze1.barScaleFactor = 0.5;                % what proportion of the height of the bar should correspond to their MVC? e.g. if 0.5, then if they squeeze at their MVC the bar fill be half filled up. Note this will also scale the position of yellow target lines as they are a % of the MVC.
-ex.squeeze1.targetLevel = 0.7;                   % e.g. 0.7 means they have to try to squeeze at 70% of their MVC
-ex.squeeze1.targetColour = ex.colours.yellow;    % colour of the target bar (usually yellow)
-ex.squeeze1.barColour = ex.colours.blue;         % colour of the bar that moves (usually blue or red)
-ex.squeeze1.barOutlineColour = ex.colours.white; % colour of the outline (usually white)
-ex.squeeze1.barHeightPixels = 300;
-ex.squeeze1.cueText = 'Squeeze!';
-
-% how long to wait before closing the screen at the end of each part of the task
-ex.screenEndWaitTime = 4;
-
 % keyboard
 KbName('UnifyKeyNames');
 ex.keys.escapeKey = KbName('ESCAPE');
@@ -105,6 +86,32 @@ ex.keys.progressKey = KbName('space'); % to continue after instructions
 
 % setup psychtoolbox
 PsychDefaultSetup(2); 
+
+%% variables about the biopac and squeezing
+ex.biopac.sampleRate = 500;               
+ex.biopac.trialDuration = 3;     
+
+% set up for a type of squeeze
+ex.squeezeDefault.trialDuration = 3;                   % (secs) how long should the squeeze show for?
+ex.squeezeDefault.squeezeTimeForSuccess = 1;           % (secs) what's the minimum time needed to squeeze above the bar to be counted as success?
+ex.squeezeDefault.barHeightPixels = 300;               % height of the bar in pixels
+ex.squeezeDefault.barScaleFactor = 0.5;                % what proportion of the height of the bar should correspond to their MVC? e.g. if 0.5, then if they squeeze at their MVC the bar fill be half filled up. Note this will also scale the position of yellow target lines as they are a % of the MVC.
+ex.squeezeDefault.targetLevel = 0.7;                   % e.g. 0.7 means they have to try to squeeze at 70% of their MVC
+ex.squeezeDefault.targetColour = ex.colours.yellow;    % colour of the target bar (usually yellow)
+ex.squeezeDefault.barColour = ex.colours.blue;         % colour of the bar that moves (usually blue or red)
+ex.squeezeDefault.barOutlineColour = ex.colours.white; % colour of the outline (usually white)
+ex.squeezeDefault.barHeightPixels = 300;
+ex.squeezeDefault.cueText = 'Squeeze!';
+
+% e.g. if you want to make another squeeze, with your default values but at 80% of MVC: 
+ex.squeezeHigh = ex.squeezeDefault; % this just copies the variable...
+ex.squeezeHigh.targetLevel = 0.8;   % ...so, this won't affect the targetLevel in ex.squeezeDefault
+
+ex.squeezeLow = ex.squeezeDefault;
+ex.squeezeLow.targetLevel = 0.3;
+
+% how long to wait before closing the screen at the end of each part of the task
+ex.screenEndWaitTime = 4;
 
 %% Run checks and setup before the experiment
 
@@ -166,19 +173,19 @@ WaitSecs(1);
 
 GetSecs;
 
-[forceData, success] = squeeze(ex, screen, ex.squeeze1);
+[forceData, success] = squeeze(ex, screen, ex.squeezeDefault);
 fixation(ex, screen);
 disp(success);
 WaitSecs(1);
 
 temp = GetSecs;
-[forceData, success] = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, ex.calib.mvc, 0.5, 'Squeeze!', 5, 3);
+[forceData, success] = squeeze(ex, screen, ex.squeeze50);
 disp(GetSecs - temp);
 fixation(ex, screen);
 disp(success);
 WaitSecs(1);
 
-[forceData, success] = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, ex.calib.mvc, 0.5, 'Squeeze!', 3, 1);
+[forceData, success] = squeeze(ex, screen, ex.squeeze30);
 fixation(ex, screen);
 disp(success);
 WaitSecs(1);
