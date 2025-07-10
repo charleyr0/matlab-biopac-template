@@ -1,12 +1,13 @@
 function [forceData, success] = squeeze(ex, screen, squeeze)
       
-    % runs a squeeze - deals with the biopac (but 
-    % the acquisition daemon must already be running)
-    % and the displaying by calling drawSqueeze, then
+    % runs a squeeze - handles the biopac (but the connection must 
+    % already be open - which is done in biopacResetConnection)
+    % and handles the display by calling drawSqueeze, then
     % returns a long list of numbers, which is the continuous
     % squeeze data throughout the trial
 
-    % if it's the calibration / you don't want a target line, use 0 for the target height
+    % if it's the calibration, so you don't want a target line, then use 0
+    % for the target height and it won't draw a target line
 
     assert(squeezeBarHeightDivisor~=0, "The squeezeBarHeightDivisor cannot be 0. Perhaps you meant to set it to 1?");
     

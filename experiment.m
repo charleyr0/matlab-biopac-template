@@ -79,7 +79,6 @@ ex.calib.text = {                             % the prompts to show throughout t
 % keyboard
 KbName('UnifyKeyNames');
 ex.keys.escapeKey = KbName('ESCAPE');
-ex.keys.scannerTriggerKey = KbName('t');
 ex.keys.acceptedKeys = KbName('space');
 ex.keys.progressKey = KbName('space'); % to continue after instructions
 % TODO add something with datapixx2 for MRI (??)
@@ -88,14 +87,13 @@ ex.keys.progressKey = KbName('space'); % to continue after instructions
 PsychDefaultSetup(2); 
 
 %% variables about the biopac and squeezing
-ex.biopac.sampleRate = 500;               
-ex.biopac.trialDuration = 3;     
+ex.biopac.sampleRate = 500;                 
 
 % set up for a type of squeeze
 ex.squeezeDefault.trialDuration = 3;                   % (secs) how long should the squeeze show for?
 ex.squeezeDefault.squeezeTimeForSuccess = 1;           % (secs) what's the minimum time needed to squeeze above the bar to be counted as success?
 ex.squeezeDefault.barHeightPixels = 300;               % height of the bar in pixels
-ex.squeezeDefault.barScaleFactor = 0.5;                % what proportion of the height of the bar should correspond to their MVC? e.g. if 0.5, then if they squeeze at their MVC the bar fill be half filled up. Note this will also scale the position of yellow target lines as they are a % of the MVC.
+ex.squeezeDefault.barScaleFactor = 0.5;                % what proportion of the height of the bar should correspond to their MVC? e.g. if 0.5, then if they squeeze at their MVC the bar will be half filled up. Note this will also scale the position of yellow target lines as they are a % of the MVC.
 ex.squeezeDefault.targetLevel = 0.7;                   % e.g. 0.7 means they have to try to squeeze at 70% of their MVC
 ex.squeezeDefault.targetColour = ex.colours.yellow;    % colour of the target bar (usually yellow)
 ex.squeezeDefault.barColour = ex.colours.blue;         % colour of the bar that moves (usually blue or red)
@@ -104,14 +102,11 @@ ex.squeezeDefault.barHeightPixels = 300;
 ex.squeezeDefault.cueText = 'Squeeze!';
 
 % e.g. if you want to make another squeeze, with your default values but at 80% of MVC: 
-ex.squeezeHigh = ex.squeezeDefault; % this just copies the variable...
-ex.squeezeHigh.targetLevel = 0.8;   % ...so, this won't affect the targetLevel in ex.squeezeDefault
+ex.squeezeHigh = ex.squeezeDefault;
+ex.squeezeHigh.targetLevel = 0.8;   
 
 ex.squeezeLow = ex.squeezeDefault;
 ex.squeezeLow.targetLevel = 0.3;
-
-% how long to wait before closing the screen at the end of each part of the task
-ex.screenEndWaitTime = 4;
 
 %% Run checks and setup before the experiment
 
@@ -195,7 +190,3 @@ sca;
 
 % save data
 % TODO
-
-% unload the dynamometer library TODO can we just leave it? so we don't
-% have to load/unload on every run?
-if libisloaded('mpdev'), unloadlibrary('mpdev'); end
