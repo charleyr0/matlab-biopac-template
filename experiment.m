@@ -34,7 +34,7 @@ filename = [num2str(data.participant.code), '-', num2str(data.participant.sessio
 
 % set these to 0 or 1 and use them to decide whether to run particular things
 ex.debug = 1;
-ex.usingDynamometer = 1;
+ex.usingDynamometer = 0;
 ex.usingEyelink = 0;
 ex.usingScanner = 0;
 
@@ -87,18 +87,17 @@ ex.keys.progressKey = KbName('space'); % to continue after instructions
 PsychDefaultSetup(2); 
 
 %% variables about the biopac and squeezing
-ex.biopac.sampleRate = 500;                 
+ex.biopac.sampleRate = 500;   
+ex.biopac.barHeightPixels = 300;
 
 % set up for a type of squeeze
 ex.squeezeDefault.trialDuration = 3;                   % (secs) how long should the squeeze show for?
 ex.squeezeDefault.squeezeTimeForSuccess = 1;           % (secs) what's the minimum time needed to squeeze above the bar to be counted as success?
-ex.squeezeDefault.barHeightPixels = 300;               % height of the bar in pixels
-ex.squeezeDefault.barScaleFactor = 0.5;                % what proportion of the height of the bar should correspond to their MVC? e.g. if 0.5, then if they squeeze at their MVC the bar will be half filled up. Note this will also scale the position of yellow target lines as they are a % of the MVC.
+ex.squeezeDefault.barScaleFactor = 0.8;                % what proportion of the height of the bar should correspond to their MVC? e.g. if 0.5, then if they squeeze at their MVC the bar will be half filled up. Note this will also scale the position of yellow target lines as they are a % of the MVC.
 ex.squeezeDefault.targetLevel = 0.7;                   % e.g. 0.7 means they have to try to squeeze at 70% of their MVC
 ex.squeezeDefault.targetColour = ex.colours.yellow;    % colour of the target bar (usually yellow)
 ex.squeezeDefault.barColour = ex.colours.blue;         % colour of the bar that moves (usually blue or red)
 ex.squeezeDefault.barOutlineColour = ex.colours.white; % colour of the outline (usually white)
-ex.squeezeDefault.barHeightPixels = 300;
 ex.squeezeDefault.cueText = 'Squeeze!';
 
 % e.g. if you want to make another squeeze, with your default values but at 80% of MVC: 
@@ -155,7 +154,7 @@ if ~ex.debug && ex.usingDynamometer
     ShowCursor(screen.window);
     sca; ListenChar(0);
 
-elseif ex.debug
+else
     ex.calib.mvc = 1;
     
 end
@@ -168,22 +167,7 @@ WaitSecs(1);
 
 GetSecs;
 
-[forceData, success] = squeeze(ex, screen, ex.squeezeDefault);
-fixation(ex, screen);
-disp(success);
-WaitSecs(1);
-
-temp = GetSecs;
-[forceData, success] = squeeze(ex, screen, ex.squeeze50);
-disp(GetSecs - temp);
-fixation(ex, screen);
-disp(success);
-WaitSecs(1);
-
-[forceData, success] = squeeze(ex, screen, ex.squeeze30);
-fixation(ex, screen);
-disp(success);
-WaitSecs(1);
+squeezeFake(ex, screen, ex.squeezeDefault, 1);
 
 %% End of script
 sca;
