@@ -160,7 +160,6 @@ WaitSecs(1);
 GetSecs;
 
 [forceData, success] = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, ex.calib.mvc, 0.5, 'Squeeze!', 3, 0.5, 1);
-
 fixation(ex, screen);
 disp(success);
 WaitSecs(1);
