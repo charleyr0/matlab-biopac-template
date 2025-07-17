@@ -1,4 +1,4 @@
-function [forceData, success] = squeeze(ex, screen, settings)
+function [forceData, success] = squeeze(ex, screen, barColour, barOutlineColour, targetLineColour, barScaleFactor, targetLevel, cueText, trialDuration, timeAboveForSuccess)
       
     % runs a squeeze - handles the biopac (but the connection must 
     % already be open - which is done in biopacResetConnection)
@@ -15,16 +15,16 @@ function [forceData, success] = squeeze(ex, screen, settings)
     acquisitionStartTime = biopacStartAcquisition();
 
     % Run the squeeze
-    fbfunc = @(f) drawSqueeze(ex, screen, settings.barColour, settings.barOutlineColour, settings.targetColour, f()/settings.barScaleFactor, settings.targetLevel, settings.cueText); 
-    [forceData, ~] = biopacListen(ex, acquisitionStartTime, settings.trialDuration, [], fbfunc);
+    fbfunc = @(f) drawSqueeze(ex, screen, barColour, barOutlineColour, targetLineColour, f()/barScaleFactor, targetLevel, cueText); 
+    [forceData, ~] = biopacListen(ex, acquisitionStartTime, trialDuration, [], fbfunc);
 
     biopacEndAcquisition();
 
     % decide whether they succeeded, i.e. got over the line for long enough
     if settings.targetLevel ~= 0 
         goalValue = settings.targetLevel * ex.calib.mvc; % get the actual value for the squeeze, from (the target % of their MVC) * (their MVC actual value)
-        timeAboveGoal = sum(forceData > goalValue)/length(forceData) * settings.trialDuration;
-        success = (timeAboveGoal >= settings.squeezeTimeForSuccess); % i.e. if RHS is true then success=1 else success=0
+        timeAboveGoal = sum(forceData > goalValue)/length(forceData) * trialDuration;
+        success = (timeAboveGoal >= timeAboveForSuccess); % i.e. if RHS is true then success=1 else success=0
     end
     
 end
