@@ -4,7 +4,7 @@ function [mvc, allSqueezeData] = squeezeCalibration(ex, screen)
     % as a decimal number and a 3 arrays containing all of the squeeze data
     % collected throughout their 3 squeeze attempts.
     
-    % Fields in ex that are required by this function:
+    % Required values:
     %
     % ex.calib.text
     %  This should be 1D array of 5 text strings. They will be
@@ -37,22 +37,21 @@ function [mvc, allSqueezeData] = squeezeCalibration(ex, screen)
         Screen('Flip', screen.window);
         WaitSecs(ex.calib.textTime);
         
-        forceData = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, heightDivisor, ex.calib.goals(i), 'Squeeze!', ex.calib.trialDuration, 0);
+        forceData = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, heightDivisor, 1.1, 'Squeeze!', ex.calib.trialDuration, 0);
         allSqueezeData{i} = forceData;
         mvc = max(mvc, max(forceData));
 
         if i==1 % just done first attempt - will adjust the 2nd/3rd squeezes relative to this one
             firstAttempt = max(forceData); 
-            heightDivisor = firstAttempt * 1.2; % so, squeezing at 1.2 times the MVC will fully fill the bar 
+            heightDivisor = firstAttempt*1.2; % so, squeezing at 1.2 times the MVC will fully fill the bar 
         end
-
+        
     end
 
     % flip final text
     DrawFormattedText(screen.window, ex.calib.text{5}, 'center', 'center', ex.colours.white);
     Screen('Flip', screen.window);
     WaitSecs(ex.calib.textTime);
-
 
 end
 

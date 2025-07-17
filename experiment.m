@@ -33,7 +33,7 @@ data.participant.code = string(data.participant.id) + '-' + string(datetime('now
 filename = [num2str(data.participant.code), '-', num2str(data.participant.session), '-data.mat'];      % e.g. would be 101-010225-1-data.mat , if session = 1 with the above
 
 % set these to 0 or 1 and use them to decide whether to run particular things
-ex.debug = 1
+ex.debug = 1;
 ex.usingDynamometer = 1;
 ex.usingEyelink = 0;
 ex.usingScanner = 0;
@@ -84,7 +84,6 @@ ex.biopac.trialDuration = 3;
 ex.biopac.squeezeTimeTotal = 3;
 ex.biopac.squeezeTimeMin = 1;
 ex.biopac.barHeightPixels = 300; % height of the bar in pixels
-ex.biopac.barMaxForce = 0.9; % set relative height of the force-bar (as %MVC)
 
 % how long to wait before closing the screen at the end of each part of the task
 ex.screenEndWaitTime = 4;
@@ -160,21 +159,24 @@ WaitSecs(1);
 
 GetSecs;
 
-[forceData, success] = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, ex.calib.mvc*0.8, 0.5, 'Squeeze!', 3, 1);
+[forceData, success] = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, ex.calib.mvc*1.2, 1.1, 'Squeeze!', 3, 1);
 
 fixation(ex, screen);
+disp('Success =');
 disp(success);
 WaitSecs(1);
 
 temp = GetSecs;
-[forceData, success] = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, ex.calib.mvc*0.8, 0.7, 'Squeeze!', 3, 1);
+[forceData, success] = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, ex.calib.mvc*1.2, 1.1, 'Squeeze!', 3, 1);
 disp(GetSecs - temp);
 fixation(ex, screen);
+disp('Success =');
 disp(success);
 WaitSecs(1);
 
-[forceData, success] = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, ex.calib.mvc*0.8, 0.9, 'Squeeze!', 3, 1);
+[forceData, success] = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, ex.calib.mvc*1.2, 1.1, 'Squeeze!', 3, 1);
 fixation(ex, screen);
+disp('Success =');
 disp(success);
 WaitSecs(1);
 

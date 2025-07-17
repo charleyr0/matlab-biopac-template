@@ -11,13 +11,10 @@ function drawSqueeze(ex, screen, barColour, outlineColour, targetLineColour, squ
 
     barHeight = ex.biopac.barHeightPixels; % height of the white outline bar not the squeeze bar TODO store barHeight/2 instead
 
-    % this line restricts the minimum height between 0 and 1.5 
-    %   0 because sometimes at rest it is very slightly negative
-    %   1.5 because higher than that overshoots the bar
-    %   then scale it to the absolute bar height
-    squeezeLevel = max(0, min(1.5, squeezeLevel)) * barHeight; 
-    % squeezeLevel used o then by multiplied by a barMaxForce which was set to 0.9
-
+    % this restricts the squeeze bar to the height of the bar
+    % it first restricts to 0 bc sometimes at rest the value is slightly negative
+    squeezeLevel = max(0, min(1, squeezeLevel)) * barHeight; 
+  
     % draw the bar outline
     Screen('FrameRect', screen.window, outlineColour, [(screen.width/2)-25 (screen.height/2)-(barHeight/2) (screen.width/2)+25 (screen.height/2)+(barHeight/2)], 4);
 
