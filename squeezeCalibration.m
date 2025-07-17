@@ -37,7 +37,7 @@ function [mvc, allSqueezeData] = squeezeCalibration(ex, screen)
         Screen('Flip', screen.window);
         WaitSecs(ex.calib.textTime);
         
-        forceData = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, heightDivisor, ex.calib.goals(i), 'Squeeze!', ex.calib.trialDuration, 0, 0);
+        forceData = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, heightDivisor, ex.calib.goals(i), 'Squeeze!', ex.calib.trialDuration, 0);
         allSqueezeData{i} = forceData;
         mvc = max(mvc, max(forceData));
 

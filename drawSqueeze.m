@@ -1,4 +1,4 @@
-function drawSqueeze(ex, screen, barColour, outlineColour, targetLineColour, squeezeLevel, targetLineLevel, cueText)
+function drawSqueeze(ex, screen, squeezeLevel, barColour, outlineColour, targetLineColour, barScaleFactor, targetLevel, cueText)
 
     % this function should only be called by squeeze.m
 
@@ -18,7 +18,7 @@ function drawSqueeze(ex, screen, barColour, outlineColour, targetLineColour, squ
     % then scales it to the absolute bar height and the scale factor
 
     % squeezeLevel adjustments
-    squeezeLevel = squeezeLevel * barHeight * ex.biopac.barScaleFactor; % scale the raw value to fit the onscreen bar
+    squeezeLevel = squeezeLevel * barHeight * barScaleFactor; % scale the raw value to fit the onscreen bar
     squeezeLevel = max(0, squeezeLevel); % if it's negative, set it to 0
     squeezeLevel = min(squeezeLevel, barHeight); % if it would overshoot the outline, cap it at the outline's height
 
@@ -31,10 +31,10 @@ function drawSqueeze(ex, screen, barColour, outlineColour, targetLineColour, squ
     
     % draw the target level (yellow line)
     % targetLineLevel is e.g. 0.5 for 50% of their MVC
-    if targetLineLevel ~= 0
+    if targetLevel ~= 0
         x1 = (screen.width/2) -25-50/8 ;
         x2 = (screen.width/2) +25+50/8 ;
-        y = baseLine - targetLineLevel * barHeight * ex.biopac.barScaleFactor;
+        y = baseLine - targetLevel * barHeight * barScaleFactor;
         Screen('DrawLines', screen.window, [x1 x2 ; y y], 7, targetLineColour);
     end
     
