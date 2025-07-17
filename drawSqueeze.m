@@ -1,4 +1,4 @@
-function drawSqueeze(ex, screen, squeezeLevel, barColour, outlineColour, targetLineColour, barScaleFactor, targetLevel, cueText)
+function drawSqueeze(ex, screen, barColour, outlineColour, targetLineColour, squeezeLevel, targetLineLevel, cueText)
 
     % this function should only be called by squeeze.m
 
@@ -11,30 +11,25 @@ function drawSqueeze(ex, screen, squeezeLevel, barColour, outlineColour, targetL
 
     barHeight = ex.biopac.barHeightPixels; % height of the white outline bar not the squeeze bar TODO store barHeight/2 instead
 
-    % this line adjusts their squeeze level to fit into the bar -
-    % first it restricts the minimum height between 0 and 1.5 
+    % this line restricts the minimum height between 0 and 1.5 
     %   0 because sometimes at rest it is very slightly negative
     %   1.5 because higher than that overshoots the bar
-    % then scales it to the absolute bar height and the scale factor
-
-    % squeezeLevel adjustments
-    squeezeLevel = squeezeLevel * barHeight * barScaleFactor; % scale the raw value to fit the onscreen bar
-    squeezeLevel = max(0, squeezeLevel); % if it's negative, set it to 0
-    squeezeLevel = min(squeezeLevel, barHeight); % if it would overshoot the outline, cap it at the outline's height
+    %   then scale it to the absolute bar height
+    squeezeLevel = max(0, min(1.5, squeezeLevel)) * barHeight; 
+    % squeezeLevel used o then by multiplied by a barMaxForce which was set to 0.9
 
     % draw the bar outline
     Screen('FrameRect', screen.window, outlineColour, [(screen.width/2)-25 (screen.height/2)-(barHeight/2) (screen.width/2)+25 (screen.height/2)+(barHeight/2)], 4);
 
-    % draw the squeeze bar
+    % draw the bar
     baseLine = (screen.height/2)+(barHeight/2); % y of bottom of bar outline
-    Screen('FillRect', screen.window, barColour, [(screen.width/2)-25 baseLine-squeezeLevel (screen.width/2)+25 baseLine]);  % These are the coordinates for the Force Feedback Bar; Original height*S
+    Screen('FillRect', screen.window, barColour, [(screen.width/2)-25   baseLine-squeezeLevel   (screen.width/2)+25   baseLine]);  % left up right down
     
     % draw the target level (yellow line)
-    % targetLineLevel is e.g. 0.5 for 50% of their MVC
-    if targetLevel ~= 0
+    if targetLineLevel ~= 0
         x1 = (screen.width/2) -25-50/8 ;
         x2 = (screen.width/2) +25+50/8 ;
-        y = baseLine - targetLevel * barHeight * barScaleFactor;
+        y = baseLine - targetLineLevel*barHeight;
         Screen('DrawLines', screen.window, [x1 x2 ; y y], 7, targetLineColour);
     end
     

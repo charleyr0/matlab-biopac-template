@@ -33,7 +33,7 @@ data.participant.code = string(data.participant.id) + '-' + string(datetime('now
 filename = [num2str(data.participant.code), '-', num2str(data.participant.session), '-data.mat'];      % e.g. would be 101-010225-1-data.mat , if session = 1 with the above
 
 % set these to 0 or 1 and use them to decide whether to run particular things
-ex.debug = 0;
+ex.debug = 1
 ex.usingDynamometer = 1;
 ex.usingEyelink = 0;
 ex.usingScanner = 0;
@@ -64,7 +64,7 @@ ex.display.textSize = 35;
 ex.display.textFont = 'Arial';
 
 % variables used for the squeeze calibration
-ex.calib.mvc = 0;                             % this needs to be initialised - will later be rewritten by their actual mvc
+ex.calib.mvc = 0;                             % this needs to be initialised but will be overwritten with their actual mvc
 ex.calib.initialSqueezeBarHeightDivisor = 4;  % scales the bar down - depends on your gain - 4 is good for 200 gain; 2 for 50 gain; you probably shouldn't use 1000 or 5000 gain with the dynamometer
 ex.calib.goals = [0, 1.1, 1.05];              % the heights of the yellow bar (as a multiplier of their initial attempt's max value) on their 3 attempts. 1st one should be 0 (which will draw no bar)
 ex.calib.textTime = 2;                        % how long (secs) to display each instruction text for
@@ -78,8 +78,13 @@ ex.calib.text = {                             % the prompts to show throughout t
   'Well done! Please wait for the next instructions.'};
 
 % variables about the biopac and squeezing
-ex.biopac.sampleRate = 500;               
+ex.biopac.sampleRate = 500; 
+ex.biopac.barColourTrials = ex.colours.red;               
+ex.biopac.trialDuration = 3;     
+ex.biopac.squeezeTimeTotal = 3;
+ex.biopac.squeezeTimeMin = 1;
 ex.biopac.barHeightPixels = 300; % height of the bar in pixels
+ex.biopac.barMaxForce = 0.9; % set relative height of the force-bar (as %MVC)
 
 % how long to wait before closing the screen at the end of each part of the task
 ex.screenEndWaitTime = 4;
@@ -142,7 +147,7 @@ if ~ex.debug && ex.usingDynamometer
     ShowCursor(screen.window);
     sca; ListenChar(0);
 
-elseif ex.debug
+else
     ex.calib.mvc = 1;
     
 end
@@ -155,19 +160,20 @@ WaitSecs(1);
 
 GetSecs;
 
-[forceData, success] = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, ex.calib.mvc, 0.5, 'Squeeze!', 3, 0.5, 1);
+[forceData, success] = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, ex.calib.mvc*0.8, 0.5, 'Squeeze!', 3, 1);
+
 fixation(ex, screen);
 disp(success);
 WaitSecs(1);
 
 temp = GetSecs;
-[forceData, success] = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, ex.calib.mvc, 0.5, 'Squeeze!', 5, 0.5, 3);
+[forceData, success] = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, ex.calib.mvc*0.8, 0.7, 'Squeeze!', 3, 1);
 disp(GetSecs - temp);
 fixation(ex, screen);
 disp(success);
 WaitSecs(1);
 
-[forceData, success] = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, ex.calib.mvc, 0.5, 'Squeeze!', 3, 0.5, 1);
+[forceData, success] = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, ex.calib.mvc*0.8, 0.9, 'Squeeze!', 3, 1);
 fixation(ex, screen);
 disp(success);
 WaitSecs(1);

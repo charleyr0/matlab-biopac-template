@@ -1,30 +1,26 @@
-function [forceData, success] = squeeze(ex, screen, barColour, outlineColour, targetLineColour, barScaleFactor, targetLevel, cueText, trialDuration, timeAboveForSuccess)
-      
-    % runs a squeeze - handles the biopac (but the connection must 
-    % already be open - which is done in biopacResetConnection)
-    % and handles the display by calling drawSqueeze, then
+function [forceData, success] = squeeze(ex, screen, barColour, outlineColour, targetLineColour, squeezeBarHeightDivisor, goal, cueText, trialDuration, timeAboveForSuccess)
+   
+    % TODO the squeezeBarHeightDivisor and the goal should come from the
+    % same thing (only keep goal probably?)
+    
+    % runs a squeeze - deals with the biopac (but 
+    % the acquisition daemon must already be running)
+    % and the displaying by calling drawSqueeze, then
     % returns a long list of numbers, which is the continuous
     % squeeze data throughout the trial
 
-    % if it's the calibration, so you don't want a target line, then use 0
-    % for the target height and it won't draw a target line
-
-    assert(barScaleFactor~=0, "The squeezeBarHeightDivisor cannot be 0. Perhaps you meant to set it to 1?");
-    
-    % Tell the biopac we want to start acquiring data now
-    acquisitionStartTime = biopacStartAcquisition();
+    % for goal, pass e.g. 0.5 if you want this squeeze to be at 50% of MVC
 
     % Run the squeeze
-    fbfunc = @(f) drawSqueeze(ex, screen, f()/barScaleFactor, barColour, outlineColour, targetLineColour, barScaleFactor, targetLevel, cueText); 
+    acquisitionStartTime = biopacStartAcquisition();
+    fbfunc = @(f) drawSqueeze(ex, screen, barColour, outlineColour, targetLineColour, f()/squeezeBarHeightDivisor, goal, cueText); 
     [forceData, ~] = biopacListen(ex, acquisitionStartTime, trialDuration, [], fbfunc);
-
     biopacEndAcquisition();
 
     % decide whether they succeeded, i.e. got over the line for long enough
-    if targetLevel ~= 0 
-        goalValue = targetLevel * ex.calib.mvc; % get the actual value for the squeeze, from (the target % of their MVC) * (their MVC actual value)
-        timeAboveGoal = sum(forceData > goalValue)/length(forceData) * trialDuration;
-        success = (timeAboveGoal >= timeAboveForSuccess); % i.e. if RHS is true then success=1 else success=0
-    end
+    goalValue = goal * ex.calib.mvc;
+    timeAboveGoal = sum(forceData > goalValue)/length(forceData) * trialDuration;
+    success = (timeAboveGoal >= timeAboveForSuccess); % i.e. if RHS is true then success=1 else success=0
+
     
 end
