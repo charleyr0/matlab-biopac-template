@@ -36,9 +36,8 @@ function [mvc, allSqueezeData] = squeezeCalibration(ex, screen)
         allSqueezeData{i} = forceData;
         mvc = max(mvc, max(forceData));
 
-        if i==1 % just done first attempt - will adjust the 2nd/3rd squeezes relative to this one
-            firstAttempt = max(forceData); 
-            heightDivisor = firstAttempt*1.2; % so, squeezing at 1.2 times the MVC will fully fill the bar 
+        if i==1 % scale the bar for the 2nd/3rd squeezes relative to their first attempt
+            heightDivisor = mvc*1.2; % so, squeezing at 1.2 times the MVC will fully fill the bar 
         end
         
     end
