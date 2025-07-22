@@ -3,41 +3,36 @@ function [mvc, allSqueezeData] = squeezeCalibration(ex, screen)
     % This function runs the squeeze calibrations and returns the MVC
     % as a decimal number and a 3 arrays containing all of the squeeze data
     % collected throughout their 3 squeeze attempts.
-    
-    % Required values:
-    %
-    % ex.calib.text
-    %  This should be 1D array of 5 text strings. They will be
-    %  written on the screen at different points throughout the calibration.
-    %
-    % ex.calib.textTime
-    %  how long (secs) to display each instruction text for
-    %
-    % ex.calib.goals
-    %  the heights of the yellow bar (as a multiplier of their initial 
-    %  attempt's max value) on their 2nd and 3rd attempts
-    %
-    % ex.calib.initialSqueezeBarHeightDivisor
-    %  if gain is 200 then a value of 4 works well for this
-    
+
     % variable setup
     allSqueezeData = cell(3,1);  
     mvc = 0;
-    heightDivisor = ex.calib.initialSqueezeBarHeightDivisor;
+    
+    % possibly might like to change these
+    heightDivisor = 4; % how much to scale the bar down for their first squeeze attempt - depends on your gain - 4 is good for 200 gain; 2 for 50 gain; you probably shouldn't use 1000 or 5000 gain with the dynamometer
+    goals = [0, 1.1, 1.05];
+    textTime = 2;                        % how long (secs) to display each instruction text for
+    trialDuration = 3;                   % how long (secs) should each squeeze last for          
+    text = {                             % the prompts to show throughout the calibration procedure
+      'You will now complete a short procedure to\n \n determine your maximum grip strength.',...
+      'Get ready to squeeze as strongly as you can...',...
+      'Now try to reach the yellow line!', ...
+      'Try one last time!', ...
+      'Well done! Please wait for the next instructions.'};
     
     % flip the intro text
-    DrawFormattedText(screen.window, ex.calib.text{1}, 'center', 'center', ex.colours.white);
+    DrawFormattedText(screen.window, text{1}, 'center', 'center', ex.colours.white);
     Screen('Flip', screen.window);
-    WaitSecs(ex.calib.textTime);
+    WaitSecs(textTime);
     
     % do the squeezes
     for i=1:3
     
-        DrawFormattedText(screen.window, ex.calib.text{i+1}, 'center', 'center', ex.colours.white);
+        DrawFormattedText(screen.window, text{i+1}, 'center', 'center', ex.colours.white);
         Screen('Flip', screen.window);
-        WaitSecs(ex.calib.textTime);
+        WaitSecs(textTime);
         
-        forceData = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, heightDivisor, 1.1, 'Squeeze!', ex.calib.trialDuration, 0);
+        forceData = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, heightDivisor, goals(i), 'Squeeze!',trialDuration, 0);
         allSqueezeData{i} = forceData;
         mvc = max(mvc, max(forceData));
 
@@ -49,9 +44,9 @@ function [mvc, allSqueezeData] = squeezeCalibration(ex, screen)
     end
 
     % flip final text
-    DrawFormattedText(screen.window, ex.calib.text{5}, 'center', 'center', ex.colours.white);
+    DrawFormattedText(screen.window, text{5}, 'center', 'center', ex.colours.white);
     Screen('Flip', screen.window);
-    WaitSecs(ex.calib.textTime);
+    WaitSecs(textTime);
 
 end
 

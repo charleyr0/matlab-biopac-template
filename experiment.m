@@ -65,17 +65,6 @@ ex.display.textFont = 'Arial';
 
 % variables used for the squeeze calibration
 ex.calib.mvc = 0;                             % this needs to be initialised but will be overwritten with their actual mvc
-ex.calib.initialSqueezeBarHeightDivisor = 4;  % scales the bar down - depends on your gain - 4 is good for 200 gain; 2 for 50 gain; you probably shouldn't use 1000 or 5000 gain with the dynamometer
-ex.calib.goals = [0, 1.1, 1.05];              % the heights of the yellow bar (as a multiplier of their initial attempt's max value) on their 3 attempts. 1st one should be 0 (which will draw no bar)
-ex.calib.textTime = 2;                        % how long (secs) to display each instruction text for
-ex.calib.trialDuration = 3;                   
-ex.calib.barColour = ex.colours.blue;
-ex.calib.text = {                             % the prompts to show throughout the calibration procedure
-  'You will now complete a short procedure to\n \n determine your maximum grip strength.',...
-  'Get ready to squeeze as strongly as you can...',...
-  'Now try to reach the yellow line!', ...
-  'Try one last time!', ...
-  'Well done! Please wait for the next instructions.'};
 
 % variables about the biopac and squeezing
 ex.biopac.sampleRate = 500; 
