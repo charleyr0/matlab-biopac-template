@@ -1,13 +1,10 @@
 function drawSqueeze(ex, screen, barColour, outlineColour, targetLineColour, squeezeLevel, mvc, maxHeightMult, goalMult, cueText)
 
-    % this function should only be called by squeeze.m
+    % this function gets called by squeeze.m
 
     % this functions draws and flips the squeezing screen
     % and should be called continuously with the varying levels of
     % height while they are collected from the dynamometer during a squeeze
-    
-    % if you don't want a target line to appear (e.g., for their very first
-    % calibration attempt), pass 0 as the targetLineHeight.
 
     barHeight = ex.biopac.barHeightPixels; % height of the white outline bar
 

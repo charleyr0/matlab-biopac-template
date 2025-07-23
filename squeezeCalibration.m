@@ -6,10 +6,11 @@ function [mvc, allSqueezeData] = squeezeCalibration(ex, screen)
 
     % variable setup
     allSqueezeData = cell(3,1);  
+    firstMvc = 1;
     mvc = 0;
     
     % possibly might like to change these
-    heightDivisor = 4;                   % how much to scale the bar down for their first squeeze attempt - depends on your gain - 4 is good for 200 gain; 2 for 50 gain; you probably shouldn't use 1000 or 5000 gain with the dynamometer
+    heightMult = 4;                      % how much to scale the bar down for their first squeeze attempt - depends on your gain - 5x is good for 200 gain
     goals = [0, 1.1, 1.05];              % the 2nd and 3rd target lines are usually at 1.1x and 1.05x their 1st attempt
     textTime = 2;                        % how long (secs) to display each instruction text for
     trialDuration = 3;                   % how long (secs) should each squeeze last for          
@@ -32,12 +33,18 @@ function [mvc, allSqueezeData] = squeezeCalibration(ex, screen)
         Screen('Flip', screen.window);
         WaitSecs(textTime);
         
-        forceData = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, heightDivisor, goals(i), 'Squeeze!', trialDuration, 0);
+        forceData = squeeze(ex, screen, firstMvc, heightMult, goals(i), 'Squeeze!', trialDuration, 0);
         allSqueezeData{i} = forceData;
         mvc = max(mvc, max(forceData));
+        disp('Max squeeze ='); disp(mvc);
 
-        if i==1 % scale the bar for the 2nd/3rd squeezes relative to their first attempt
-            heightDivisor = mvc*1.2; % so, squeezing at 1.2 times the MVC will fully fill the bar 
+        if i==1 
+            % scale the bar for the 2nd/3rd squeezes relative to their first attempt -
+            % the first time, we use 4 with a guessed mvc of 1,
+            % but for 2nd and 3rd attempts, use something smaller
+            firstMvc = mvc;
+            heightMult = 1.2; % so, squeezing at 1.2 times the MVC will fully fill the bar 
+            
         end
         
     end

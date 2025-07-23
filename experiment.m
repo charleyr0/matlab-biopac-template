@@ -33,7 +33,7 @@ data.participant.code = string(data.participant.id) + '-' + string(datetime('now
 filename = [num2str(data.participant.code), '-', num2str(data.participant.session), '-data.mat'];      % e.g. would be 101-010225-1-data.mat , if session = 1 with the above
 
 % set these to 0 or 1 and use them to decide whether to run particular things
-ex.debug = 1;
+ex.debug = 0;
 ex.usingDynamometer = 1;
 ex.usingEyelink = 0;
 ex.usingScanner = 0;
