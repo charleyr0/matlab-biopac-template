@@ -1,4 +1,4 @@
-function drawSqueeze(ex, screen, barColour, outlineColour, targetLineColour, squeezeLevel, targetLineLevel, cueText)
+function drawSqueeze(ex, screen, barColour, outlineColour, targetLineColour, squeezeLevel, mvc, maxHeightMult, goalMult, cueText)
 
     % this function should only be called by squeeze.m
 
@@ -9,24 +9,24 @@ function drawSqueeze(ex, screen, barColour, outlineColour, targetLineColour, squ
     % if you don't want a target line to appear (e.g., for their very first
     % calibration attempt), pass 0 as the targetLineHeight.
 
-    barHeight = ex.biopac.barHeightPixels; % height of the white outline bar not the squeeze bar TODO store barHeight/2 instead
+    barHeight = ex.biopac.barHeightPixels; % height of the white outline bar
 
-    % this restricts the squeeze bar to the height of the bar
+    % this scales the squeeze to their mvc and the height of the bar
     % it first restricts to 0 bc sometimes at rest the value is slightly negative
-    squeezeLevel = max(0, min(1, squeezeLevel)) * barHeight; 
+    squeezeLevel = max(0, min(1, squeezeLevel/(mvc*maxHeightMult))) * barHeight; 
   
     % draw the bar outline
     Screen('FrameRect', screen.window, outlineColour, [(screen.width/2)-25 (screen.height/2)-(barHeight/2) (screen.width/2)+25 (screen.height/2)+(barHeight/2)], 4);
 
-    % draw the bar
+    % draw the squeeze
     baseLine = (screen.height/2)+(barHeight/2); % y of bottom of bar outline
     Screen('FillRect', screen.window, barColour, [(screen.width/2)-25   baseLine-squeezeLevel   (screen.width/2)+25   baseLine]);  % left up right down
     
     % draw the target level (yellow line)
-    if targetLineLevel ~= 0
+    if goalMult ~= 0
         x1 = (screen.width/2) -25-50/8 ;
         x2 = (screen.width/2) +25+50/8 ;
-        y = baseLine - targetLineLevel*barHeight;
+        y = baseLine - (goalMult/maxHeightMult)*barHeight;
         Screen('DrawLines', screen.window, [x1 x2 ; y y], 7, targetLineColour);
     end
     

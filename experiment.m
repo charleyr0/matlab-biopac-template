@@ -64,7 +64,7 @@ ex.display.textSize = 35;
 ex.display.textFont = 'Arial';
 
 % variables used for the squeeze calibration
-ex.calib.mvc = 0;                             % this needs to be initialised but will be overwritten with their actual mvc
+ex.calib.mvc = 1; % this needs to be initialised but will be overwritten with their actual mvc
 
 % variables about the biopac and squeezing
 ex.biopac.sampleRate = 500; 
@@ -139,31 +139,30 @@ else
     ex.calib.mvc = 1;
     
 end
+mvc = ex.calib.mvc; % as a shorter way of typing it in future
 
 % run main task
 waitForY('> Are you ready to start the main task (y/n)? ');
 screen = openOnscreenWindow(ex); % open a PTB screen with pre-specified parameters
 fixation(ex, screen);
 WaitSecs(1);
-
 GetSecs;
 
-[forceData, success] = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, ex.calib.mvc*1.2, 1.1, 'Squeeze!', 3, 1);
-
+[forceData, success] = squeeze(ex, screen, mvc, 2, 0.5, 'Squeeze!', 3, 1);
 fixation(ex, screen);
 disp('Success =');
 disp(success);
 WaitSecs(1);
 
 temp = GetSecs;
-[forceData, success] = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, ex.calib.mvc*1.2, 1.1, 'Squeeze!', 3, 1);
+[forceData, success] = squeeze(ex, screen, mvc, 2, 0.5, 'Squeeze!', 3, 1);
 disp(GetSecs - temp);
 fixation(ex, screen);
 disp('Success =');
 disp(success);
 WaitSecs(1);
 
-[forceData, success] = squeeze(ex, screen, ex.colours.blue, ex.colours.white, ex.colours.yellow, ex.calib.mvc*1.2, 1.1, 'Squeeze!', 3, 1);
+[forceData, success] = squeeze(ex, screen, mvc, 2, 0.5, 'Squeeze!', 3, 1);
 fixation(ex, screen);
 disp('Success =');
 disp(success);

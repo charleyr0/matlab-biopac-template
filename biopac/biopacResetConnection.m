@@ -15,7 +15,7 @@ function restingSqueezeValue = biopacResetConnection(ex)
     end
 
     % disconnect then reconnect
-    calllib('mpdev', 'disconnectMPDev');              
+    calllib('mpdev', 'disconnectMPDev');   
     [msg, ~] = calllib('mpdev','connectMPDev', 103, 11,'auto');
  
     % if the returned msg is not MPSUCCESS, then it's an error - print it (and stop running)
