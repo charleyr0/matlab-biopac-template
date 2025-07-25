@@ -1,10 +1,13 @@
-function [forceData, success] = squeeze(ex, screen, mvc, maxHeightMult, goalMult, cueText, trialDuration, timeAboveForSuccess)
+function [forceData, success] = squeeze(ex, screen, mvc, maxHeightMult, goalMult, cueText, trialDuration, timeAboveForSuccess, ~)
        
     % runs a squeeze - deals with the biopac (but 
     % the acquisition daemon must already be running)
     % and the displaying by calling drawSqueeze, then
     % returns a long list of numbers, which is the continuous
     % squeeze data throughout the trial
+
+    % the ignored final parameter is the fakeSqueezeLevel if calling
+    % fakeSqueeze instead of this function
 
     % PARAMETERS:
     % squeezeBarHeight              e.g. if 1.5, then they would need to squeeze at 1.5x their MVC to fill the bar to maximum

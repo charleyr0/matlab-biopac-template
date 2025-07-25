@@ -33,10 +33,11 @@ data.participant.code = string(data.participant.id) + '-' + string(datetime('now
 filename = [num2str(data.participant.code), '-', num2str(data.participant.session), '-data.mat'];      % e.g. would be 101-010225-1-data.mat , if session = 1 with the above
 
 % set these to 0 or 1 and use them to decide whether to run particular things
-ex.debug = 0;
+ex.debug = 1;
 ex.usingDynamometer = 1;
 ex.usingEyelink = 0;
 ex.usingScanner = 0;
+
 
 % a prompt will be given asking you to check that it's set to this gain
 biopacGain = 200;                 
@@ -155,7 +156,7 @@ disp(success);
 WaitSecs(1);
 
 temp = GetSecs;
-[forceData, success] = squeeze(ex, screen, mvc, 2, 0.5, 'Squeeze!', 3, 1);
+[forceData, success] = squeezeFake(ex, screen, mvc, 2, 0.5, 'Squeeze!', 3, 1, 0.6);
 disp(GetSecs - temp);
 fixation(ex, screen);
 disp('Success =');
