@@ -7,8 +7,6 @@ clearvars;
 %% Folder setup
 dataFolderName = 'data';          % data collected from the experiment will be stored in this folder
 assetsFolderName = 'assets';      % the folder containing any images etc used in the experiment
-
-% create a folder for the data to be saved in, if it doesn't exist yet
 if ~isfolder(dataFolderName), mkdir(dataFolderName); end
 
 % add subfolders (containing matlab scripts) to path, so that they can be
@@ -38,7 +36,6 @@ ex.usingDynamometer = 1;
 ex.usingEyelink = 0;
 ex.usingScanner = 0;
 
-
 % a prompt will be given asking you to check that it's set to this gain
 biopacGain = 200;                 
 
@@ -52,11 +49,6 @@ ex.colours.yellow = [255 255 0] / 255;
 ex.colours.red =    [255 0 0] / 255;
 ex.colours.green =  [20 244 4] / 255;
 ex.colours.blue =   [28 4 244] / 255;
-
-% fixation cross appearance
-ex.fixation.colour = ex.colours.white;
-ex.fixation.barWidth = 3;
-ex.fixation.barLength = 20;
 
 % some display settings - these are used by openOnScreenWindow for setting up the screen
 ex.display.backgroundColour = ex.colours.grey;

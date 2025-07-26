@@ -1,9 +1,9 @@
 function fixation(ex, screen)
 
     % Define fixation cross properties
-    colour = ex.fixation.colour;
-    width = ex.fixation.barWidth;
-    length = ex.fixation.barLength;
+    colour = [1 1 1] % white
+    width = 3;
+    length = 20;
 
     % Draw horizontal line of fixation cross
     Screen('DrawLine', screen.window, colour, ...
