@@ -13,6 +13,7 @@ if ~isfolder(dataFolderName), mkdir(dataFolderName); end
 % referenced more easily by the other scripts in this experiment
 addpath(fullfile(pwd, 'biopac'));
 addpath(fullfile(pwd, 'eyelink'));
+addpath(fullfile(pwd, 'squeeze'));
 
 % force to run from the experiment's own directory to avoid potential errors
 [scriptDir,~,~] = fileparts(mfilename('fullpath'));
@@ -129,7 +130,7 @@ end
 
 % run main task
 waitForY('> Are you ready to start the main task (y/n)? ');
-screen = openOnscreenWindow(ex); % open a PTB screen with pre-specified parameters
+screen = openOnscreenWindow(ex, ); % open a PTB screen with pre-specified parameters
 fixation(ex, screen);
 WaitSecs(1);
 GetSecs;

@@ -1,6 +1,5 @@
 function fixation(ex, screen)
 
-    % Define fixation cross properties
     colour = [1 1 1] % white
     width = 3;
     length = 20;

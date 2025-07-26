@@ -5,7 +5,6 @@ function drawSqueeze(ex, screen, barColour, outlineColour, targetLineColour, squ
     % this functions draws and flips the squeezing screen
     % and should be called continuously with the varying levels of
     % height while they are collected from the dynamometer during a squeeze
-
     barHeight = ex.biopac.barHeightPixels; % height of the white outline bar
 
     % this scales the squeeze to their mvc and the height of the bar
