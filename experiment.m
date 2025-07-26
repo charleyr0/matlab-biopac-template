@@ -68,7 +68,6 @@ ex.display.textFont = 'Arial';
 ex.calib.mvc = 1; % this needs to be initialised but will be overwritten with their actual mvc
 
 % variables about the biopac and squeezing
-ex.biopac.sampleRate = 500; 
 ex.biopac.barColourTrials = ex.colours.red;               
 ex.biopac.trialDuration = 3;     
 ex.biopac.squeezeTimeTotal = 3;
