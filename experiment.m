@@ -56,18 +56,12 @@ ex.display.screenRect = [0 0 800 600]; %screen.fullScrn = [(1920/2)+100 200 1920
 ex.display.textSize = 35;
 ex.display.textFont = 'Arial';
 
-% variables used for the squeeze calibration
-ex.calib.mvc = 1; % this needs to be initialised but will be overwritten with their actual mvc
-
 % variables about the biopac and squeezing
 ex.biopac.barColourTrials = ex.colours.red;               
 ex.biopac.trialDuration = 3;     
 ex.biopac.squeezeTimeTotal = 3;
 ex.biopac.squeezeTimeMin = 1;
 ex.biopac.barHeightPixels = 300; % height of the bar in pixels
-
-% how long to wait before closing the screen at the end of each part of the task
-ex.screenEndWaitTime = 4;
 
 % keyboard
 KbName('UnifyKeyNames');
@@ -120,6 +114,8 @@ if ~ex.debug && ex.usingDynamometer
     screen = openOnscreenWindow(ex);
 
     [ex.calib.mvc, calibSqueezeData] = squeezeCalibration(ex, screen);
+    mvc = ex.calib.mvc; % as a shorter way of typing it in future
+
     data.calibSqueezeData = calibSqueezeData;
     save([dataFolderName, '/', filename], 'data', 'ex', 'screen');
 
@@ -128,10 +124,8 @@ if ~ex.debug && ex.usingDynamometer
     sca; ListenChar(0);
 
 else
-    ex.calib.mvc = 1;
-    
+    mvc = 0;
 end
-mvc = ex.calib.mvc; % as a shorter way of typing it in future
 
 % run main task
 waitForY('> Are you ready to start the main task (y/n)? ');
