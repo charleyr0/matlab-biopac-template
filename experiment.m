@@ -33,7 +33,7 @@ filename = [num2str(data.participant.code), '-', num2str(data.participant.sessio
 
 % set these to 0 or 1 and use them to decide whether to run particular things
 ex.debug = 1;
-ex.usingDynamometer = 1;
+ex.usingDynamometer = 0;
 ex.usingEyelink = 0;
 ex.usingScanner = 0;
 
@@ -114,31 +114,28 @@ if ~ex.debug && ex.usingDynamometer
     waitForY('> Are you ready to start calibration (y/n)? ');
     screen = openOnscreenWindow(ex);
 
-    [ex.calib.mvc, calibSqueezeData] = squeezeCalibration(ex, screen);
-    mvc = ex.calib.mvc; % as a shorter way of typing it in future
+    [ex.mvc, calibSqueezeData] = squeezeCalibration(ex, screen);
+    mvc = ex.mvc; % as a shorter way of typing it in future
 
     data.calibSqueezeData = calibSqueezeData;
     save([dataFolderName, '/', filename], 'data', 'ex', 'screen');
 
-    disp(ex.calib.mvc);
+    disp(ex.mvc);
     ShowCursor(screen.window);
     sca; ListenChar(0);
 
 else
-    mvc = 0;
+    ex.mvc = 1;
 end
 
 % run main task
 waitForY('> Are you ready to start the main task (y/n)? ');
-screen = openOnscreenWindow(ex, screen);    % open a PTB screen with pre-specified parameters
-fixation(ex, screen);                       % 1s fixation cross
+screen = openOnscreenWindow(ex);    % open a PTB screen with pre-specified parameters
+fixation(screen);                   % 1s fixation cross
 WaitSecs(1);
-data = mainTask();                          % run main task
-sca;                                        % close PTB screen
-save(filename, 'data')                      % save data from main task
-
-
-
+data = mainTask(ex, screen);        % run main task
+sca;                                % close PTB screen
+save(filename, 'data')              % save data from main task
 
 %% End of script
 sca;
