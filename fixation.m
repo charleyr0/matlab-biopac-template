@@ -1,4 +1,4 @@
-function fixation(screen)
+function fixation(screen, duration)
 
     colour = [1 1 1]; % white
     width = 3;
@@ -18,5 +18,6 @@ function fixation(screen)
 
     % Flip the screen to show the fixation cross
     Screen('Flip', screen.window);
+    WaitSecs(duration);
 
 end

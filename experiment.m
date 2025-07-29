@@ -4,13 +4,28 @@ clear all;
 close all;
 clearvars;
 
-%% Folder setup
-dataFolderName = 'data';          % data collected from the experiment will be stored in this folder
-assetsFolderName = 'assets';      % the folder containing any images etc used in the experiment
+%% Variables
+
+% participant info
+data.participant.id = 101;                
+data.participant.session = 1; 
+data.participant.code = string(data.participant.id) + '_' + string(datetime('now', 'Format', 'yyyy-MM-dd'));
+filename = [num2str(data.participant.code), '-', num2str(data.participant.session), '.mat'];
+
+% set these to 0 or 1 and use them to decide whether to run particular things
+ex.debug = 1;
+ex.usingDynamometer = 1;
+ex.usingEyelink = 0;
+ex.usingScanner = 0;
+
+% a prompt will be given asking you to check that it's set to this gain
+biopacGain = 200;      
+
+% create data folder if it doesn't exist
+dataFolderName = 'data';
 if ~isfolder(dataFolderName), mkdir(dataFolderName); end
 
-% add subfolders (containing matlab scripts) to path, so that they can be
-% referenced more easily by the other scripts in this experiment
+% add subfolders containing matlab scripts to path so they can be found by other functions
 addpath(fullfile(pwd, 'biopac'));
 addpath(fullfile(pwd, 'eyelink'));
 addpath(fullfile(pwd, 'squeeze'));
@@ -21,26 +36,7 @@ currentDir = pwd;
 if ~strcmp(scriptDir, currentDir)
     cd(scriptDir);
     disp("Changed directory to the script's directory");
-end
-
-%% Data variables
-
-% experiment variables
-data.participant.id = 101;                
-data.participant.session = 1; 
-data.participant.code = string(data.participant.id) + '_' + string(datetime('now', 'Format', 'yyyy-MM-dd'));    % e.g. would be 101-010225 , if pptID = 101 on 01/02/25
-filename = [num2str(data.participant.code), '-', num2str(data.participant.session), '-data.mat'];      % e.g. would be 101-010225-1-data.mat , if session = 1 with the above
-
-% set these to 0 or 1 and use them to decide whether to run particular things
-ex.debug = 1;
-ex.usingDynamometer = 1;
-ex.usingEyelink = 0;
-ex.usingScanner = 0;
-
-% a prompt will be given asking you to check that it's set to this gain
-biopacGain = 200;                 
-
-%% Setup - ex
+end         
 
 % define some colours, to use later without typing out the full colour code
 ex.colours.white =  [255 255 255] / 255;
@@ -53,15 +49,11 @@ ex.colours.blue =   [28 4 244] / 255;
 
 % some display settings - these are used by openOnScreenWindow for setting up the screen
 ex.display.backgroundColour = ex.colours.grey;
-ex.display.screenRect = [0 0 800 600]; %screen.fullScrn = [(1920/2)+100 200 1920-200 1080-200]
+ex.display.screenRect = [0 0 800 600]; % [0 0 800 600] is a small window - [0 0 1920 1080] is usually full screen
 ex.display.textSize = 35;
 ex.display.textFont = 'Arial';
 
-% variables about the biopac and squeezing
-ex.biopac.barColourTrials = ex.colours.red;               
-ex.biopac.trialDuration = 3;     
-ex.biopac.squeezeTimeTotal = 3;
-ex.biopac.squeezeTimeMin = 1;
+% variables about the biopac and squeezing           
 ex.biopac.barHeightPixels = 300; % height of the bar in pixels
 
 % keyboard
@@ -70,12 +62,16 @@ ex.keys.escapeKey = KbName('ESCAPE');
 ex.keys.scannerTriggerKey = KbName('t');
 ex.keys.acceptedKeys = KbName('space');
 ex.keys.progressKey = KbName('space'); % to continue after instructions
-% TODO add something with datapixx2 for MRI (??)
+
+% save the ex variable - it shouldn't change now throughout the experiment
+save([dataFolderName, '/', filename], 'data', 'ex');
+
+
+%% Run checks and setup before the experiment
 
 % setup psychtoolbox
 PsychDefaultSetup(2); 
-
-%% Run checks and setup before the experiment
+% TODO add something with datapixx2 for MRI (??)
 
 % move cursor to commandwindow so in case of crash you can type ctrl c there
 commandwindow
@@ -107,9 +103,7 @@ if ex.usingScanner
     PsychDataPixx('Open');
 end
 
-%% Start the experiment
-
-% run squeeze calibration
+%% Run squeeze calibration
 if ~ex.debug && ex.usingDynamometer
     waitForY('> Are you ready to start calibration (y/n)? ');
     screen = openOnscreenWindow(ex);
@@ -128,19 +122,13 @@ else
     ex.mvc = 1;
 end
 
-%% run main task
-
+%% Run main task
 waitForY('> Are you ready to start the main task (y/n)? ');
 screen = openOnscreenWindow(ex);    % open a PTB screen with pre-specified parameters
-fixation(screen);                   % 1s fixation cross
-WaitSecs(1);
+fixation(screen, 1);                % 1s fixation cross
 data = mainTask(ex, screen);        % run main task
 sca;                                % close PTB screen
-save([dataFolderName, '/', filename], 'data')              % save data from main task
+save([dataFolderName, '/', filename], 'data');
 
 %% End of script
 sca;
-
-% unload the dynamometer library TODO can we just leave it? so we don't
-% have to load/unload on every run?
-if libisloaded('mpdev'), unloadlibrary('mpdev'); end
