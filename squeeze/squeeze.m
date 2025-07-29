@@ -27,7 +27,7 @@ function [forceData, success] = squeeze(ex, screen, mvc, maxHeightMult, goalMult
     biopacEndAcquisition();
 
     % decide whether they succeeded, i.e. got over the line for long enough
-    goal = goalMult * ex.calib.mvc;                                                
+    goal = goalMult * mvc;                                                
     timeAboveGoal = sum(forceData > goal)/length(forceData) * trialDuration;        % (proportion of time above target line) * (total trial seconds)
     success = (timeAboveGoal >= timeAboveForSuccess);                               % i.e. if RHS is true then success=1 else success=0
 

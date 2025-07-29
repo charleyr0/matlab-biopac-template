@@ -27,7 +27,7 @@ function restingSqueezeValue = biopacResetConnection(ex)
     end
 
     disp("Biopac connection was successful!");
-    calllib('mpdev', 'setSampleRate', 0.5); % ms between samples
+    calllib('mpdev', 'setSampleRate', 1000/500); % ms between samples
     calllib('mpdev', 'setAcqChannels', int32([1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]));  % just want the first channel
 
     % poll 1s of squeeze data to return, for checking the resting value

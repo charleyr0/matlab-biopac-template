@@ -28,12 +28,12 @@ end
 % experiment variables
 data.participant.id = 101;                
 data.participant.session = 1; 
-data.participant.code = string(data.participant.id) + '-' + string(datetime('now', 'Format', 'ddMMyy'));    % e.g. would be 101-010225 , if pptID = 101 on 01/02/25
+data.participant.code = string(data.participant.id) + '_' + string(datetime('now', 'Format', 'yyyy-MM-dd'));    % e.g. would be 101-010225 , if pptID = 101 on 01/02/25
 filename = [num2str(data.participant.code), '-', num2str(data.participant.session), '-data.mat'];      % e.g. would be 101-010225-1-data.mat , if session = 1 with the above
 
 % set these to 0 or 1 and use them to decide whether to run particular things
 ex.debug = 1;
-ex.usingDynamometer = 0;
+ex.usingDynamometer = 1;
 ex.usingEyelink = 0;
 ex.usingScanner = 0;
 
@@ -128,14 +128,15 @@ else
     ex.mvc = 1;
 end
 
-% run main task
+%% run main task
+
 waitForY('> Are you ready to start the main task (y/n)? ');
 screen = openOnscreenWindow(ex);    % open a PTB screen with pre-specified parameters
 fixation(screen);                   % 1s fixation cross
 WaitSecs(1);
 data = mainTask(ex, screen);        % run main task
 sca;                                % close PTB screen
-save(filename, 'data')              % save data from main task
+save([dataFolderName, '/', filename], 'data')              % save data from main task
 
 %% End of script
 sca;

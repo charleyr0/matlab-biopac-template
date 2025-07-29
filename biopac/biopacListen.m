@@ -1,4 +1,4 @@
-function [squeezeData, timeOfLastAcquisition] = biopacListen(ex, timeOfLastAcquisition, trialTime, ISI, drawingFunction)
+function [squeezeData, timeOfLastAcquisition] = biopacListen(~, timeOfLastAcquisition, trialTime, ISI, drawingFunction)
 
     %  Function to stream data from squeezy device
     %  Requires the MP Acquisition daemon to be running
@@ -41,10 +41,10 @@ function [squeezeData, timeOfLastAcquisition] = biopacListen(ex, timeOfLastAcqui
     % nothing and returns immediately.
 
     % calculate how many samples need to be read from the Biopac
-    queueLen = @(lastread) 2 * floor((GetSecs-lastread) * ex.biopac.sampleRate);
+    queueLen = @(lastread) 2 * floor((GetSecs-lastread) * 500);
     
     % set up recording buffer of 3 seconds, and buffer
-    record = nan * zeros(ex.biopac.sampleRate * ISI, 1);
+    record = nan * zeros(500 * ISI, 1);
     lq = queueLen(timeOfLastAcquisition);
     buffer = nan * zeros(lq,1);
 
