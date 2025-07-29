@@ -130,7 +130,7 @@ end
 
 % run main task
 waitForY('> Are you ready to start the main task (y/n)? ');
-screen = openOnscreenWindow(ex, ); % open a PTB screen with pre-specified parameters
+screen = openOnscreenWindow(ex, screen); % open a PTB screen with pre-specified parameters
 fixation(ex, screen);
 WaitSecs(1);
 GetSecs;
