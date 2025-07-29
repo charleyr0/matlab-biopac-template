@@ -20,10 +20,6 @@ Run the experiment.m script in MATLAB.
 - If you install PTB and matlab and gstreamer on a new pc, make a note of the versions of all those things you use
 - If you don't have two screens, set the psychtoolbox window size to just a section of the screen, e.g. [0 0 800 600] instead of [0 0 1920 1080].
 
-## Things in this script
-### 'ex' variable
-This variable has lots of parts to it, organised into ex.display, ex.biopac, ex.calib, ex.task. These values are defined at the top of the experiment.m script.
-
 ## Using the dynamometer and biopac
 The squeezy handle is called a dynamometer. The thing it is plugged into is called an MP150 or MP160 data acquisition device (we have some of both models) but for simplicity we just call them a "biopac" which is the name of the company that makes all this stuff.
 
@@ -33,24 +29,3 @@ The gain setting can be changed between 50, 200, 1000, and 5000 using the switch
 To see what changing the gain does, close matlab, open the biopac software (Acqknowledge), start recording, and try squeezing the handle at each of the different gain settings. It won't cause any damage to change the gain during recording. 
 
 With some setups, using 1000 or 5000 gain will clip off the top of hard squeezes, so it's best to avoid using these for your experiment. Other than that, people seem to have no particular reason for choosing between 50 or 200 gain - just make sure your choice is consistent across all participants otherwise it will be more difficult to compare/analyse.
-
-### /biopac folder
-In the biopac folder, there are 4 .m files which contain code that communicates with the mex files (also in this folder). Mex files are C code that can be run by matlab scripts, and these ones have been provided by Biopac to use when communicating between matlab and the devices.
-
-The biopac scripts are called in experiment.m to reset, open, and close the connection to the biopac, and in squeeze.m to run a dynamometer squeeze. 
-
-#### Calibration
-The calibrateSqueezy.m file runs the calibration
-
-### Using the scanner
-When using the MRI scanner for your task, you will run the task on the stim PC in the control room. This PC received triggers from the scanner, which essentially means that a 't' on the keyboard is triggered with every TR. To sync up your task data with the scanner when analysing, your task will need to listen out for the first t keypress it receives from the scanner and make a note of when this happens, and then your main task can start running after this has been received.
-
-You will hear a few volumes being collected before the scanner sends the first 't'.
-
-## General advice
-- When you start developing your task, make a note of the versions of matlab, psychtoolbox, and gstreamer you use to develop your task. If you ever have to run your task on a different setup (e.g. for MRI), you might have to make some slight adjustments to the layout of things.
-
-### Programming style
-If statements evaluate an expression to true (1) or false (0).
-If you have a variable debug = 1, then doing "if debug == 1" is the same as "if debug" and
-"if debug == 0" is the same as "if ~debug". The ~ means "not", so it checks whether debug is not 1.
