@@ -133,27 +133,8 @@ waitForY('> Are you ready to start the main task (y/n)? ');
 screen = openOnscreenWindow(ex, screen); % open a PTB screen with pre-specified parameters
 fixation(ex, screen);
 WaitSecs(1);
-GetSecs;
 
-[forceData, success] = squeeze(ex, screen, mvc, 2, 0.5, 'Squeeze!', 3, 1);
-fixation(ex, screen);
-disp('Success =');
-disp(success);
-WaitSecs(1);
 
-temp = GetSecs;
-[forceData, success] = squeezeFake(ex, screen, mvc, 2, 0.5, 'Squeeze!', 3, 1, 0.6);
-disp(GetSecs - temp);
-fixation(ex, screen);
-disp('Success =');
-disp(success);
-WaitSecs(1);
-
-[forceData, success] = squeeze(ex, screen, mvc, 2, 0.5, 'Squeeze!', 3, 1);
-fixation(ex, screen);
-disp('Success =');
-disp(success);
-WaitSecs(1);
 
 %% End of script
 sca;
