@@ -7,7 +7,7 @@ function [forceData, success] = squeeze(ex, screen, mvc, maxHeightMult, goalMult
     % squeeze data throughout the trial
 
     % the ignored final parameter is the fakeSqueezeLevel if calling
-    % fakeSqueeze instead of this function
+    % squeezeFake instead of this function
 
     % PARAMETERS:
     % squeezeBarHeight              e.g. if 1.5, then they would need to squeeze at 1.5x their MVC to fill the bar to maximum

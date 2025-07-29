@@ -1,20 +1,23 @@
-function [mainTaskData] = mainTask()
+function [mainTaskData] = mainTask(ex, screen)
 
     mainTaskData = table('Size', [0 5], ...
         'VariableNames', {'trialNum', 'startTime', 'EndTime', 'squeezeData', 'success'}, ...
-        'VariableTypes', {'double', 'double', 'double', 'double', 'double'});
+        'VariableTypes', {'double', 'double', 'double', 'cell', 'double'});
     
     squeezeLevels = [0.3, 0.5, 0.7, 0.3, 0.5, 0.7, 0.3, 0.5, 0.7];
+    
+    fixation(screen);
+    WaitSecs(1);
 
     for tr = 1:9
         startTime = GetSecs;
-        [forceData, success] = fakeSqueeze(ex, screen, mvc, 2, squeezeLevels{tr}, 'Squeeze!', 3, 1);
-        fixation(ex, screen);
+        [forceData, success] = squeezeFake(ex, screen, ex.mvc, 1.1, squeezeLevels(tr), 'Squeeze!', 3, 1, 0.9);
+        fixation(screen);
+        WaitSecs(1);
         disp('Success =');
         disp(success);
-        WaitSecs(1);
         endTime = GetSecs;
-        mainTaskData(end+1, :) = {1, startTime, endTime, forceData, success};
+        mainTaskData(end+1, :) = {tr, startTime, endTime, forceData, success};
     end
 
 end
