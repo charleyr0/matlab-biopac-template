@@ -4,9 +4,9 @@ function [mainTaskData] = mainTask()
         'VariableNames', {'trialNum', 'startTime', 'EndTime', 'squeezeData', 'success'}, ...
         'VariableTypes', {'double', 'double', 'double', 'double', 'double'});
     
-    squeezeLevels = [0.3, 0.5, 0.7];
+    squeezeLevels = [0.3, 0.5, 0.7, 0.3, 0.5, 0.7, 0.3, 0.5, 0.7];
 
-    for tr = 1:10 
+    for tr = 1:9
         startTime = GetSecs;
         [forceData, success] = fakeSqueeze(ex, screen, mvc, 2, squeezeLevels{tr}, 'Squeeze!', 3, 1);
         fixation(ex, screen);

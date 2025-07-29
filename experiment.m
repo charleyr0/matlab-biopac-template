@@ -130,17 +130,18 @@ end
 
 % run main task
 waitForY('> Are you ready to start the main task (y/n)? ');
-screen = openOnscreenWindow(ex, screen); % open a PTB screen with pre-specified parameters
-fixation(ex, screen);
+screen = openOnscreenWindow(ex, screen);    % open a PTB screen with pre-specified parameters
+fixation(ex, screen);                       % 1s fixation cross
 WaitSecs(1);
+data = mainTask();                          % run main task
+sca;                                        % close PTB screen
+save(filename, 'data')                      % save data from main task
+
 
 
 
 %% End of script
 sca;
-
-% save data
-% TODO
 
 % unload the dynamometer library TODO can we just leave it? so we don't
 % have to load/unload on every run?
