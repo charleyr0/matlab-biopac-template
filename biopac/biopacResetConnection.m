@@ -1,5 +1,8 @@
 function restingSqueezeValue = biopacResetConnection(ex)
 
+    % in calllib('mpdev','connectMPDev',...
+    %  for MP160 use 103, for MP150 use 101
+    
     % generally there is no need to unload the library, but if you
     % want to, just enter this in the command window:
     % unloadlibrary('mpdev');
