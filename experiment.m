@@ -13,7 +13,7 @@ data.participant.code = string(data.participant.id) + '_' + string(datetime('now
 filename = [num2str(data.participant.code), '-', num2str(data.participant.session), '.mat'];
 
 % set these to 0 or 1 and use them to decide whether to run particular things
-ex.debug = 1;
+ex.debug = 0;
 ex.usingDynamometer = 1;
 ex.usingEyelink = 0;
 ex.usingScanner = 0;
@@ -49,7 +49,7 @@ ex.colours.blue =   [28 4 244] / 255;
 
 % some display settings - these are used by openOnScreenWindow for setting up the screen
 ex.display.backgroundColour = ex.colours.grey;
-ex.display.screenRect = [0 0 800 600]; % [0 0 800 600] is a small window - [0 0 1920 1080] is usually full screen
+ex.display.screenRect = [0 0 1920 1080]; % [0 0 800 600] is a small window - [0 0 1920 1080] is usually full screen
 ex.display.textSize = 35;
 ex.display.textFont = 'Arial';
 
