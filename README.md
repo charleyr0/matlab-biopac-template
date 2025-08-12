@@ -26,4 +26,6 @@ The squeezy handle is called a dynamometer. The thing it is plugged into is call
 ### Biopac gain settings
 The gain setting can be changed between 50, 200, 1000, and 5000 using the switch on the front of the biopac.
 
+To see what changing the gain does, close matlab, open the biopac software (Acqknowledge), start recording, and try squeezing the handle at each of the different gain settings. It won't cause any damage to change the gain during recording. 
+
 With some setups, using 1000 or 5000 gain will clip off the top of hard squeezes, so it's best to avoid using these for your experiment. Other than that, people seem to have no particular reason for choosing between 50 or 200 gain - just make sure your choice is consistent across all participants otherwise it will be more difficult to compare/analyse.
