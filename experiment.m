@@ -22,7 +22,7 @@ ex.usingScanner = 0;
 biopacGain = 200;      
 
 % create data folder if it doesn't exist
-dataFolderName = 'data';
+dataFolderName = 'example-data';
 if ~isfolder(dataFolderName), mkdir(dataFolderName); end
 
 % add subfolders containing matlab scripts to path so they can be found by other functions
