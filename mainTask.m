@@ -1,11 +1,11 @@
 function [data] = mainTask(ex, screen)
 
-    % this runs 3 squeezes - at 0.5, 0.5, and 0.7 times their mvc
+    % runs 3 squeezes - at 0.5x, 0.5x, and 0.7x mvc
 
     squeezeLevels = [0.5, 0.5, 0.7];
     fixation(screen, 1);
 
-    % to test without the biopac, you can change the function call 'squeeze' to 'squeezeFake' and keep the input arguments the same
+    % to test without the biopac, you can change the function call 'squeeze' to 'squeezeFake' and keep the rest of the line the same
     for tr = 1:3
 
         startTime = GetSecs;

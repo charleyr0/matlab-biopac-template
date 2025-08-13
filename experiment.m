@@ -97,7 +97,7 @@ if ex.usingEyelink
     % line
 end
 
-% initial datapixx projector, if using TODO not used yet
+% initialise datapixx projector, if using TODO not used yet
 if ex.usingScanner
     PsychDataPixx('SetDummyMode', 0);
     PsychDataPixx('Open');
@@ -109,8 +109,7 @@ if ~ex.debug && ex.usingDynamometer
     screen = openOnscreenWindow(ex);
 
     [ex.mvc, calibSqueezeData] = squeezeCalibration(ex, screen);
-    mvc = ex.mvc; % as a shorter way of typing it in future
-
+    
     data.calibSqueezeData = calibSqueezeData;
     save([dataFolderName, '/', filename], 'data', 'ex', 'screen');
 

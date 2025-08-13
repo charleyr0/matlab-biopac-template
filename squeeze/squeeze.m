@@ -1,17 +1,17 @@
 function [forceData, success] = squeeze(ex, screen, mvc, maxHeightMult, goalMult, cueText, trialDuration, timeAboveForSuccess, ~)
        
-    % runs a squeeze - deals with the biopac (but 
-    % the acquisition daemon must already be running)
-    % and the displaying by calling drawSqueeze, then
-    % returns a long list of numbers, which is the continuous
+    % runs a squeeze then returns a long list of numbers, which is the continuous
     % squeeze data throughout the trial
 
-    % maxHeightMult                 e.g. if 1.5, then they would need to squeeze at 1.5x their MVC to fill the bar to maximum
-    % goalMult                      e.g. use 0.5 if you want the goal to be 0.5x their MVC
-    % cueText                       usually 'GO!' or blank
-    % trialDuration                 in seconds
-    % timeAboveForSuccess           how many seconds they need to hold above the line to count as a successful trial
-    % ~                             this is the fakeSqueezeLevel but it's not used in this function
+    % 1. ex
+    % 2. screen
+    % 3. mvc
+    % 4. maxHeightMult                 e.g. if 1.5, then they would need to squeeze at 1.5x their MVC to fill the bar to maximum
+    % 5. goalMult                      e.g. use 0.5 if you want the goal to be 0.5x their MVC
+    % 6. cueText                       usually 'GO!' or blank
+    % 7. trialDuration                 in seconds
+    % 8. timeAboveForSuccess           how many seconds they need to hold above the line to count as a successful trial
+    % ~                                this is the fakeSqueezeLevel but it's not used in this function
 
     barColour = [28 4 244] / 255;           % blue
     outlineColour = [255 255 255] / 255;    % white
