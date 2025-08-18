@@ -10,7 +10,7 @@ function [mvc, allSqueezeData] = squeezeCalibration(ex, screen)
     mvc = 0;
     
     % possibly might like to change these
-    heightMult = 4;                      % how much to scale the bar down for their first squeeze attempt - depends on your gain - 5x is good for 200 gain
+    heightMult = 5;                      % how much to scale the bar down for their first squeeze attempt - depends on your gain - 5x seems good for 200 gain
     goals = [0, 1.1, 1.05];              % the 2nd and 3rd target lines are usually at 1.1x and 1.05x their 1st attempt
     textTime = 2;                        % how long (secs) to display each instruction text for
     trialDuration = 3;                   % how long (secs) should each squeeze last for          
@@ -40,10 +40,10 @@ function [mvc, allSqueezeData] = squeezeCalibration(ex, screen)
 
         if i==1 
             % scale the bar for the 2nd/3rd squeezes relative to their first attempt -
-            % the first time, we use 4 with a guessed mvc of 1,
+            % the first time, we use 5 with a guessed mvc of 1,
             % but for 2nd and 3rd attempts, use something smaller
             firstMvc = mvc;
-            heightMult = 1.2; % so, squeezing at 1.2 times the MVC will fully fill the bar 
+            heightMult = 1.5; % so, squeezing at 1.5 times the MVC will fully fill the bar 
             
         end
         
